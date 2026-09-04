@@ -23,9 +23,6 @@ services:
       dockerfile: Dockerfile
     container_name: ghaf
     restart: unless-stopped
-    depends_on:
-      - api
-
     deploy:
       resources:
         limits:
