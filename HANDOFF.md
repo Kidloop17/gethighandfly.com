@@ -2,22 +2,27 @@
 Обновлено: 2026-09-04
 
 ## Сейчас
-Фаза 0 (Фундамент) — не начата. Документация обновлена по финальному CLAUDE.md:
-стек пересмотрен (нет Tailwind, нет Docker/nginx → Caddy + rsync + GitHub Actions),
-добавлен бэкенд Fastify + SQLite как отдельный сервис, Content Collections вместо Website Factory.
+Фаза 0 (Фундамент) — выполнена (коммит `9283e32`), кроме деплоя.
+Astro v7.3.1, TypeScript strict, три локали `/en/ /ru/ /vi/`, i18n utils, Base.astro с hreflang,
+CSS-токены, reset, GitHub Actions workflow (без секретов), Caddy-шаблон.
+`npm run build` → 3 страницы, 0 ошибок.
 
 ## Следующий шаг
-Начать Фазу 0:
-1. `npm create astro@latest` — TypeScript strict, minimal template
-2. Настроить структуру папок по `docs/ARCHITECTURE.md`
-3. Добавить i18n-конфиг в `astro.config.mjs` (locales: en/ru/vi, prefixDefaultLocale: true)
-4. Написать `src/i18n/utils.ts` (useTranslations, getLangFromUrl)
-5. Настроить redirect на / через Caddy (Accept-Language → 302) + cookie для ручного выбора
-6. hreflang + x-default в BaseLayout
-7. Self-hosted шрифты, reset CSS
-8. Первый деплой пустой страницы
+Завершить Фазу 0: первый деплой на VPS.
+**Блокирован — нужно от владельца:**
+- Адрес VPS (`DEPLOY_HOST`)
+- Пользователь SSH (`DEPLOY_USER`)
+- SSH-ключ для GitHub Actions (`DEPLOY_KEY`)
+- Путь на VPS (`DEPLOY_PATH`, напр. `/var/www/ghaf`)
+- Реальный домен → прописать `site:` в `astro.config.mjs`
 
-Критерий готовности Фазы 0: `/en/`, `/ru/`, `/vi/` открываются, редирект работает, деплой проходит.
+После получения данных:
+1. Добавить секреты в GitHub Settings → Secrets
+2. Задеплоить Caddy-конфиг из `caddy/Caddyfile.template` на VPS
+3. Сделать push → Actions выполнит build → rsync → caddy reload
+4. Проверить `/en/`, `/ru/`, `/vi/` и редирект с `/`
+
+Если деплой откладывается — можно начинать Фазу 1 параллельно.
 
 ## Нужно от владельца (блокирует работу)
 - [ ] Точные даты сезона 2027
@@ -41,4 +46,6 @@
 - Счётчик мест (`GET /api/slots`) — кэш 60 сек. Не делать прямые запросы к SQLite из фронта.
 
 ## Файлы в работе
-- пока нет (Фаза 0 не начата)
+- `astro.config.mjs` — нужно добавить `site:` когда будет домен
+- `caddy/Caddyfile.template` — нужно скопировать на VPS с заменой `example.com`
+- `.github/workflows/deploy.yml` — нужно добавить секреты в GitHub
