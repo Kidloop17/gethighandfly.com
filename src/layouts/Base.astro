@@ -1,0 +1,41 @@
+---
+import '../styles/tokens.css';
+
+interface Props {
+  lang: string;
+  title?: string;
+  description?: string;
+}
+
+const { lang, title = 'Get High And Fly', description = '' } = Astro.props;
+
+// Astro.site is undefined when `site` is not set in astro.config.mjs
+// Use a fallback so build doesn't fail; replace with real domain in production
+const siteBase = Astro.site ?? new URL('https://example.com');
+const canonicalURL = new URL(Astro.url.pathname, siteBase);
+
+const locales = ['en', 'ru', 'vi'];
+---
+
+<!DOCTYPE html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    {locales.map((l) => (
+      <link
+        rel="alternate"
+        hreflang={l}
+        href={new URL(`/${l}/`, siteBase)}
+      />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={new URL('/en/', siteBase)} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

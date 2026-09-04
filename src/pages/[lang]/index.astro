@@ -1,0 +1,19 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getLangFromUrl, LANGS } from '../../i18n/utils';
+import type { Lang } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Lang };
+---
+
+<Base lang={lang} title="Get High And Fly">
+  <main>
+    <h1>Get High And Fly</h1>
+    <p>Lang: {lang}</p>
+    <!-- TODO: секции лендинга (Фаза 1) -->
+  </main>
+</Base>

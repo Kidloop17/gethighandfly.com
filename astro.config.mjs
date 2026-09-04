@@ -1,0 +1,12 @@
+import { defineConfig } from 'astro/config';
+
+export default defineConfig({
+  output: 'static',
+  i18n: {
+    locales: ['en', 'ru', 'vi'],
+    defaultLocale: 'en',
+    routing: {
+      prefixDefaultLocale: true,
+    },
+  },
+});

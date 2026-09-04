@@ -1,0 +1,52 @@
+# TODO: заменить example.com на реальный домен
+
+example.com {
+    # Автоматический редирект / по Accept-Language
+    @ru {
+        path /
+        not header Cookie *lang=en*
+        not header Cookie *lang=vi*
+        header Accept-Language *ru*
+    }
+    @vi {
+        path /
+        not header Cookie *lang=en*
+        not header Cookie *lang=ru*
+        header Accept-Language *vi*
+    }
+    @en_cookie {
+        path /
+        header Cookie *lang=en*
+    }
+    @ru_cookie {
+        path /
+        header Cookie *lang=ru*
+    }
+    @vi_cookie {
+        path /
+        header Cookie *lang=vi*
+    }
+
+    redir @en_cookie /en/ 302
+    redir @ru_cookie /ru/ 302
+    redir @vi_cookie /vi/ 302
+    redir @ru /ru/ 302
+    redir @vi /vi/ 302
+    redir / /en/ 302
+
+    # Прокси API на бэкенд (Фаза 3)
+    handle /api/* {
+        reverse_proxy localhost:3001
+    }
+
+    # Статика
+    root * /var/www/ghaf
+    file_server
+    encode gzip zstd
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+    }
+}
