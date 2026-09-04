@@ -2,25 +2,46 @@
 Обновлено: 2026-09-04
 
 ## Сейчас
-Фаза 0 (Фундамент) — выполнена (коммит `9283e32`), кроме деплоя.
-Astro v7.3.1, TypeScript strict, три локали `/en/ /ru/ /vi/`, i18n utils, Base.astro с hreflang,
-CSS-токены, reset, GitHub Actions workflow (без секретов), Caddy-шаблон.
-`npm run build` → 3 страницы, 0 ошибок.
+Фаза 0 (Фундамент) — код готов и запушен в GitHub (`bd530f2`).
+Docker+nginx схема (как kitemuine): контейнер `ghaf`, порт 8082, dist/ в git.
+GitHub Actions: push → build → commit dist/ [skip ci] → push.
+Сервер делает: `git pull && docker compose up -d --build`.
 
 ## Следующий шаг
-Завершить Фазу 0: первый деплой на VPS.
-**Блокирован — нужно от владельца:**
-- Адрес VPS (`DEPLOY_HOST`)
-- Пользователь SSH (`DEPLOY_USER`)
-- SSH-ключ для GitHub Actions (`DEPLOY_KEY`)
-- Путь на VPS (`DEPLOY_PATH`, напр. `/var/www/ghaf`)
-- Реальный домен → прописать `site:` в `astro.config.mjs`
+Завершить Фазу 0: первый деплой на VPS (ручные шаги на сервере).
 
-После получения данных:
-1. Добавить секреты в GitHub Settings → Secrets
-2. Задеплоить Caddy-конфиг из `caddy/Caddyfile.template` на VPS
-3. Сделать push → Actions выполнит build → rsync → caddy reload
-4. Проверить `/en/`, `/ru/`, `/vi/` и редирект с `/`
+**Что нужно сделать на VPS (твой шаг):**
+```bash
+cd /var/www
+git clone git@github.com:Kidloop17/gethighandfly.com.git ghaf
+cd ghaf
+docker compose up -d --build
+```
+
+**Host nginx** — создать vhost (по аналогии с kitemuine):
+```nginx
+server {
+    listen 80;
+    server_name example.com www.example.com;  # заменить на реальный домен
+    return 301 https://$host$request_uri;
+}
+server {
+    listen 443 ssl;
+    server_name example.com www.example.com;
+    # SSL от certbot
+    location / {
+        proxy_pass http://127.0.0.1:8082;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+```
+
+**Certbot:** `certbot --nginx -d example.com -d www.example.com`
+
+**Блокирует:**
+- Реальный домен (сейчас placeholder `example.com` в `astro.config.mjs`)
+- DNS A-записи → IP VPS
 
 Если деплой откладывается — можно начинать Фазу 1 параллельно.
 
@@ -46,6 +67,5 @@ CSS-токены, reset, GitHub Actions workflow (без секретов), Cadd
 - Счётчик мест (`GET /api/slots`) — кэш 60 сек. Не делать прямые запросы к SQLite из фронта.
 
 ## Файлы в работе
-- `astro.config.mjs` — нужно добавить `site:` когда будет домен
-- `caddy/Caddyfile.template` — нужно скопировать на VPS с заменой `example.com`
-- `.github/workflows/deploy.yml` — нужно добавить секреты в GitHub
+- `astro.config.mjs` — заменить `https://example.com` на реальный домен
+- `docker-compose.yml` — порт 8082; `APP_PORT` переменная для переопределения
