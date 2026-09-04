@@ -2,9 +2,13 @@
 Обновлено: 2026-09-04
 
 ## Сейчас
+**Фаза 3 — ЗАВЕРШЕНА.** Fastify + SQLite бэкенд, POST /api/register, GET /api/slots,
+антиспам (honeypot + time-check + rate-limit), Telegram-уведомления, email-подтверждение,
+лист ожидания, privacy-страница на 3 языках, форма подключена.
+Ждём подтверждения владельца → Фаза 4 (SEO + оптимизация).
+
 **Фаза 2 — ЗАВЕРШЕНА.** Дизайн Kite-Poster: Bebas Neue + Playfair Display + Source Sans 3,
 палитра sand/coral/ocean, parallax hero, scroll-reveal, hover-анимации, prefers-reduced-motion.
-Ждём подтверждения владельца → Фаза 3 (регистрация и бэкенд).
 
 **Фаза 1 — ЗАВЕРШЕНА.** Все 9 секций на месте, i18n en/ru/vi, архив из коллекции.
 
@@ -17,7 +21,10 @@
 | Продакшн | https://gethighandfly.com |
 | VPS | 180.93.3.75 (superbot@vps-okpizza-prod) |
 | GitHub | github.com/Kidloop17/gethighandfly.com |
-| Контейнер | `ghaf`, порт **8084** |
+| Контейнер web | `ghaf`, порт **8084** |
+| Контейнер api | `ghaf-api`, порт **3001** (внутренний) |
+| Данные БД | Docker volume `ghaf_data` → `/data/registrations.db` |
+| Конфиг API | `server/.env` на VPS (скопировать из `server/.env.example`) |
 | nginx vhost | `/etc/nginx/sites-available/gethighandfly.com` |
 | SSL | certbot (Let's Encrypt) |
 | Деплой | `bash /var/www/gethighandfly/deploy.sh` |
@@ -36,9 +43,20 @@ GitHub Actions: build → commit dist/ [skip ci] → push
 Потом `bash deploy.sh` на сервере подхватывает новый dist/.
 
 ## Следующий шаг
-**Фаза 3 — Регистрация и бэкенд**: Fastify + SQLite, POST /api/register, GET /api/slots,
-антиспам, Telegram-уведомления, email-подтверждение на 3 языках, лист ожидания.
-Ждать подтверждения Фазы 2 перед стартом.
+**Фаза 4 — SEO + оптимизация**: `@astrojs/sitemap`, `schema.org SportsEvent` JSON-LD,
+уникальные title/description/OG на каждую локаль, OG-картинки,
+все изображения → AVIF+WebP через `<Image>`, lazy-load галереи,
+robots.txt, favicon-набор, manifest.json, Lighthouse ≥ 95 mobile.
+Ждать подтверждения Фазы 3 перед стартом.
+
+## Деплой Фазы 3 на VPS (первый раз)
+После `git push` и `bash deploy.sh`:
+```bash
+cp server/.env.example server/.env
+# Заполнить server/.env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, SMTP_*
+docker compose up -d --build
+```
+Volume `ghaf_data` создаётся автоматически, БД инициализируется при первом запуске.
 
 ## Нужно от владельца (для Фазы 1)
 - [ ] Точные даты сезона 2027
