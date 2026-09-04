@@ -1,21 +1,21 @@
 :root {
   /* Fonts */
   --font-display: 'Bebas Neue', Impact, sans-serif;
-  --font-accent: 'Playfair Display', Georgia, serif;
+  --font-accent: 'Barlow Condensed', Impact, sans-serif;
   --font-body: 'Source Sans 3', system-ui, sans-serif;
   --font-mono: 'Courier New', 'Roboto Mono', monospace;
 
-  /* Colors */
-  --color-bg: #F5E9CC;
-  --color-bg-alt: #FAF4E4;
-  --color-bg-dark: #1C2B3A;
-  --color-text: #1C2B3A;
-  --color-text-muted: #4A5D6E;
-  --color-text-on-dark: #F5E9CC;
-  --color-accent: #E8522A;
-  --color-accent-hover: #C9401C;
-  --color-ocean: #1A5276;
-  --color-ocean-hover: #154566;
+  /* Colors — Ocean Fury */
+  --color-bg: #050D1A;
+  --color-bg-alt: #0A1628;
+  --color-bg-dark: #020810;
+  --color-text: #E8F4FF;
+  --color-text-muted: #7AA8C8;
+  --color-text-on-dark: #E8F4FF;
+  --color-accent: #FF2020;
+  --color-accent-hover: #CC0000;
+  --color-ocean: #0099FF;
+  --color-ocean-hover: #007ACC;
 
   /* Spacing */
   --space-xs: 0.25rem;
@@ -39,8 +39,8 @@
   --text-small: 0.875rem;
 
   /* Effects */
-  --shadow-card: 0 4px 24px rgba(28,43,58,0.12);
-  --shadow-hover: 0 8px 32px rgba(28,43,58,0.2);
+  --shadow-card: 0 4px 24px rgba(0,153,255,0.08);
+  --shadow-hover: 0 0 32px rgba(0,153,255,0.25);
   --radius: 4px;
   --transition: 200ms ease;
 

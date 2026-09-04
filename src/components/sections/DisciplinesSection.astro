@@ -68,7 +68,7 @@ const CATEGORIES = ['pro_men', 'pro_women', 'amateur', 'junior'] as const;
   }
 
   .category-card {
-    border: 2px solid var(--color-ocean);
+    border: 1px solid rgba(0, 153, 255, 0.25);
     border-radius: var(--radius);
     padding: var(--space-l);
     display: flex;
@@ -76,7 +76,7 @@ const CATEGORIES = ['pro_men', 'pro_women', 'amateur', 'junior'] as const;
     gap: var(--space-s);
     background: var(--color-bg-alt);
     box-shadow: var(--shadow-card);
-    transition: transform var(--transition), box-shadow var(--transition);
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
     position: relative;
     overflow: hidden;
   }
@@ -84,6 +84,7 @@ const CATEGORIES = ['pro_men', 'pro_women', 'amateur', 'junior'] as const;
   .category-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-hover);
+    border-color: rgba(0, 153, 255, 0.6);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -123,7 +124,7 @@ const CATEGORIES = ['pro_men', 'pro_women', 'amateur', 'junior'] as const;
     font-family: var(--font-body);
     font-size: var(--text-small);
     color: var(--color-text-muted);
-    border-top: 1px solid rgba(26, 82, 118, 0.2);
+    border-top: 1px solid rgba(0, 153, 255, 0.15);
     padding-top: var(--space-s);
   }
 </style>
