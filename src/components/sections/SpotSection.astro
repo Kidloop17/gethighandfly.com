@@ -1,0 +1,103 @@
+---
+import type { Lang } from '../../i18n/utils';
+import { useTranslations } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<section id="spot">
+  <div class="spot-container">
+    <header>
+      <h2>{t('spot.heading')}</h2>
+    </header>
+    <div class="spot-content">
+      <div class="spot-text">
+        <p>{t('spot.body')}</p>
+        <div class="wind-block">
+          <h3>{t('spot.wind.heading')}</h3>
+          <p>{t('spot.wind.body')}</p>
+        </div>
+      </div>
+      <div class="spot-visuals">
+        <div class="placeholder-block map-placeholder">
+          <p>TODO: Map embed</p>
+          <small>{t('spot.map.caption')}</small>
+        </div>
+        <div class="placeholder-block video-placeholder">
+          <p>TODO: Spot video</p>
+          <small>{t('spot.forecast.label')}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  #spot {
+    padding: var(--space-xl) var(--space-l);
+  }
+  .spot-container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+  }
+  header {
+    margin-bottom: var(--space-l);
+  }
+  h2 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+  }
+  .spot-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
+  }
+  @media (max-width: 768px) {
+    .spot-content {
+      grid-template-columns: 1fr;
+    }
+  }
+  .spot-text {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-l);
+  }
+  .spot-text p {
+    opacity: 0.85;
+    line-height: var(--line-height-base);
+  }
+  .wind-block h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: var(--space-s);
+    color: var(--color-accent);
+  }
+  .spot-visuals {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+  .placeholder-block {
+    border: 2px dashed color-mix(in srgb, var(--color-text) 20%, transparent);
+    border-radius: 8px;
+    padding: var(--space-l);
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-s);
+    text-align: center;
+  }
+  .placeholder-block p {
+    opacity: 0.4;
+    font-size: 1rem;
+  }
+  .placeholder-block small {
+    opacity: 0.5;
+    font-size: 0.75rem;
+  }
+</style>

@@ -1,17 +1,21 @@
 ---
 import '../styles/tokens.css';
+import { useTranslations } from '../i18n/utils';
+import type { Lang } from '../i18n/utils';
+import LanguageSwitcher from '../components/ui/LanguageSwitcher.astro';
 
 interface Props {
-  lang: string;
+  lang: Lang;
   title?: string;
   description?: string;
 }
 
 const { lang, title = 'Get High And Fly', description = '' } = Astro.props;
+const t = useTranslations(lang);
 
 // Astro.site is undefined when `site` is not set in astro.config.mjs
 // Use a fallback so build doesn't fail; replace with real domain in production
-const siteBase = Astro.site ?? new URL('https://example.com');
+const siteBase = Astro.site ?? new URL('https://gethighandfly.com');
 const canonicalURL = new URL(Astro.url.pathname, siteBase);
 
 const locales = ['en', 'ru', 'vi'];
@@ -36,6 +40,59 @@ const locales = ['en', 'ru', 'vi'];
     <link rel="alternate" hreflang="x-default" href={new URL('/en/', siteBase)} />
   </head>
   <body>
+    <header class="site-nav">
+      <a href={`/${lang}/`} class="site-logo">GHAF</a>
+      <nav class="site-nav-links">
+        <a href="#archive">{t('nav.archive')}</a>
+        <a href="#registration" class="btn-nav">{t('nav.register')}</a>
+      </nav>
+      <LanguageSwitcher current={lang} />
+    </header>
     <slot />
   </body>
 </html>
+<style>
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: var(--space-l);
+    padding: var(--space-m) var(--space-l);
+    background: color-mix(in srgb, var(--color-bg) 90%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+  }
+  .site-logo {
+    font-size: 1.25rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    color: var(--color-text);
+    flex-shrink: 0;
+  }
+  .site-nav-links {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    margin-left: auto;
+  }
+  .site-nav-links a {
+    color: var(--color-text);
+    text-decoration: none;
+    opacity: 0.75;
+    font-size: 0.9375rem;
+  }
+  .site-nav-links a:hover {
+    opacity: 1;
+  }
+  .btn-nav {
+    background: var(--color-accent);
+    color: #000 !important;
+    opacity: 1 !important;
+    padding: 0.4rem 1rem;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+</style>

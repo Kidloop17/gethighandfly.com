@@ -1,0 +1,144 @@
+---
+import type { Lang } from '../../i18n/utils';
+import { useTranslations } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  startDate?: string;
+}
+
+const { lang, startDate } = Astro.props;
+const t = useTranslations(lang);
+
+// Только передаём дату в client script если она не TODO
+const validDate = startDate && !startDate.includes('TODO') ? startDate : undefined;
+---
+<section id="hero">
+  <div class="hero-video-placeholder" aria-hidden="true">
+    <!-- TODO: <video autoplay muted loop playsinline poster="..."> -->
+    <p class="placeholder-note">TODO: Hero video</p>
+  </div>
+  <div class="hero-content">
+    <h1>Get High And Fly</h1>
+    <p class="hero-dates">{t('hero.dates')}</p>
+    <p class="hero-spot">{t('hero.spot')}</p>
+    {validDate && (
+      <div class="countdown" data-target={validDate}>
+        <span class="countdown-label">{t('hero.countdown.label')}</span>
+        <div class="countdown-display">
+          <span class="cd-days">--</span> {t('hero.countdown.days')}
+          <span class="cd-hours">--</span> {t('hero.countdown.hours')}
+          <span class="cd-min">--</span> {t('hero.countdown.minutes')}
+          <span class="cd-sec">--</span> {t('hero.countdown.seconds')}
+        </div>
+      </div>
+    )}
+    <div class="hero-actions">
+      <a href="#registration" class="btn btn-primary">{t('hero.cta.register')}</a>
+      <a href="#archive" class="btn btn-secondary">{t('hero.cta.archive')}</a>
+    </div>
+  </div>
+</section>
+<script>
+  const el = document.querySelector('.countdown[data-target]') as HTMLElement | null;
+  if (el) {
+    const raw = el.dataset.target ?? '';
+    if (raw && !raw.includes('TODO')) {
+      const target = new Date(raw).getTime();
+      function tick() {
+        const diff = target - Date.now();
+        if (diff <= 0) {
+          const display = el!.querySelector('.countdown-display');
+          const label = el!.querySelector('.countdown-label');
+          if (display && label) display.textContent = label.textContent ?? '';
+          return;
+        }
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        const days = el!.querySelector('.cd-days') as HTMLElement | null;
+        const hours = el!.querySelector('.cd-hours') as HTMLElement | null;
+        const min = el!.querySelector('.cd-min') as HTMLElement | null;
+        const sec = el!.querySelector('.cd-sec') as HTMLElement | null;
+        if (days) days.textContent = String(d).padStart(2, '0');
+        if (hours) hours.textContent = String(h).padStart(2, '0');
+        if (min) min.textContent = String(m).padStart(2, '0');
+        if (sec) sec.textContent = String(s).padStart(2, '0');
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+  }
+</script>
+<style>
+  #hero {
+    position: relative;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-l);
+  }
+  .hero-video-placeholder {
+    position: absolute;
+    inset: 0;
+    background: #111;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .placeholder-note {
+    color: #555;
+    font-size: 0.875rem;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+  }
+  .hero-content h1 {
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: var(--space-s);
+  }
+  .hero-dates,
+  .hero-spot {
+    margin: 0.25rem 0;
+    opacity: 0.85;
+  }
+  .hero-actions {
+    margin-top: var(--space-l);
+    display: flex;
+    gap: var(--space-m);
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .btn-primary {
+    background: var(--color-accent);
+    color: #000;
+  }
+  .btn-secondary {
+    border: 2px solid #fff;
+    color: #fff;
+  }
+  .countdown {
+    margin: var(--space-m) 0;
+  }
+  .countdown-label {
+    font-size: 0.875rem;
+    opacity: 0.7;
+  }
+  .countdown-display {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
+    font-variant-numeric: tabular-nums;
+  }
+</style>

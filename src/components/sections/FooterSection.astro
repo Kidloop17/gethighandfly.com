@@ -1,0 +1,143 @@
+---
+import type { Lang } from '../../i18n/utils';
+import { useTranslations } from '../../i18n/utils';
+import LanguageSwitcher from '../ui/LanguageSwitcher.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<footer id="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <span class="footer-logo">GHAF</span>
+        <p class="footer-tagline">Get High And Fly</p>
+      </div>
+      <div class="footer-contact">
+        <h3>{t('footer.contact')}</h3>
+        <ul>
+          <li>
+            <a href={`mailto:${t('footer.email')}`}>{t('footer.email')}</a>
+          </li>
+          <li>
+            <a href="#" rel="noopener" target="_blank">{t('footer.telegram')}</a>
+          </li>
+          <li>
+            <a href="#" rel="noopener" target="_blank">{t('footer.instagram')}</a>
+          </li>
+        </ul>
+      </div>
+      <div class="footer-lang">
+        <span class="footer-lang-label">{t('footer.lang')}</span>
+        <LanguageSwitcher current={lang} />
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-rights">{t('footer.rights')}</p>
+      <nav class="footer-legal">
+        <a href="#">{t('footer.privacy')}</a>
+        <a href="#">{t('footer.rules')}</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+<style>
+  #footer {
+    padding: var(--space-xl) var(--space-l) var(--space-l);
+    background: color-mix(in srgb, var(--color-bg) 90%, #000);
+    border-top: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+  }
+  .footer-container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+  @media (max-width: 640px) {
+    .footer-top {
+      grid-template-columns: 1fr;
+    }
+  }
+  .footer-logo {
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+  }
+  .footer-tagline {
+    font-size: 0.875rem;
+    opacity: 0.5;
+    margin-top: var(--space-xs);
+  }
+  .footer-contact h3 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+    margin-bottom: var(--space-s);
+  }
+  .footer-contact ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  .footer-contact a {
+    color: var(--color-text);
+    text-decoration: none;
+    opacity: 0.75;
+  }
+  .footer-contact a:hover {
+    opacity: 1;
+    color: var(--color-accent);
+  }
+  .footer-lang {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+  .footer-lang-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+  }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-m);
+    padding-top: var(--space-l);
+    border-top: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+  }
+  .footer-rights {
+    font-size: 0.8125rem;
+    opacity: 0.45;
+  }
+  .footer-legal {
+    display: flex;
+    gap: var(--space-m);
+  }
+  .footer-legal a {
+    font-size: 0.8125rem;
+    color: var(--color-text);
+    opacity: 0.45;
+    text-decoration: none;
+  }
+  .footer-legal a:hover {
+    opacity: 0.8;
+  }
+</style>

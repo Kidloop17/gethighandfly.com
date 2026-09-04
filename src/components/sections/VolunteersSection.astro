@@ -1,0 +1,101 @@
+---
+import type { Lang } from '../../i18n/utils';
+import { useTranslations } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+
+const ROLES = ['judges', 'photo', 'media'] as const;
+---
+<section id="volunteers">
+  <div class="volunteers-container">
+    <header>
+      <h2>{t('volunteers.heading')}</h2>
+      <p class="volunteers-intro">{t('volunteers.body')}</p>
+    </header>
+    <div class="roles-grid">
+      {ROLES.map(role => (
+        <article class="role-card">
+          <h3>{t(`volunteers.roles.${role}.title`)}</h3>
+          <p>{t(`volunteers.roles.${role}.desc`)}</p>
+        </article>
+      ))}
+    </div>
+    <div class="benefits-block">
+      <p>{t('volunteers.benefits')}</p>
+    </div>
+    <a href="#registration" class="btn btn-primary">{t('volunteers.cta')}</a>
+  </div>
+</section>
+<style>
+  #volunteers {
+    padding: var(--space-xl) var(--space-l);
+  }
+  .volunteers-container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-l);
+  }
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+  h2 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+  }
+  .volunteers-intro {
+    opacity: 0.85;
+    max-width: 640px;
+  }
+  .roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-m);
+  }
+  .role-card {
+    border: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent);
+    border-radius: 8px;
+    padding: var(--space-l);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+  .role-card h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+  .role-card p {
+    opacity: 0.8;
+    line-height: var(--line-height-base);
+  }
+  .benefits-block {
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+    border-left: 3px solid var(--color-accent);
+    padding: var(--space-m) var(--space-l);
+    border-radius: 0 8px 8px 0;
+  }
+  .benefits-block p {
+    opacity: 0.9;
+  }
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    width: fit-content;
+  }
+  .btn-primary {
+    background: var(--color-accent);
+    color: #000;
+  }
+</style>

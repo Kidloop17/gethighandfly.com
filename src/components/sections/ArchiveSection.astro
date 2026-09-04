@@ -1,0 +1,193 @@
+---
+import { getCollection } from 'astro:content';
+import type { Lang } from '../../i18n/utils';
+import { useTranslations } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const seasons = (await getCollection('seasons')).sort((a, b) => b.data.year - a.data.year);
+---
+<section id="archive">
+  <div class="archive-container">
+    <header>
+      <h2>{t('archive.heading')}</h2>
+    </header>
+    {seasons.length > 0 ? (
+      <>
+        <div class="archive-tabs" role="tablist">
+          {seasons.map((s, i) => (
+            <button
+              role="tab"
+              class="archive-tab"
+              data-year={String(s.data.year)}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              aria-controls={`season-${s.data.year}`}
+            >{s.data.year}</button>
+          ))}
+        </div>
+        {seasons.map((s, i) => (
+          <div
+            id={`season-${s.data.year}`}
+            role="tabpanel"
+            class="season-panel"
+            hidden={i !== 0}
+          >
+            {(s.data.status === 'upcoming' || s.data.status === 'registration-open') && (
+              <div class="season-upcoming">
+                <p>
+                  {s.data.status === 'upcoming'
+                    ? t('archive.upcoming.status')
+                    : t('archive.open.cta')}
+                </p>
+                <a href="#registration" class="btn btn-primary">{t('archive.upcoming.cta')}</a>
+              </div>
+            )}
+            {s.data.status === 'live' && (
+              <p class="season-live">{t('archive.live.status')}</p>
+            )}
+            {s.data.status === 'past' && (
+              <div class="season-past">
+                {s.data.winners.length > 0 && (
+                  <div class="winners-block">
+                    <h3>{t('archive.past.winners')}</h3>
+                    <ul>
+                      {s.data.winners.map(w => (
+                        <li>{w.category}: {w.name} — {w.height}m</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                <p class="participants-count">
+                  {s.data.participantsCount} {t('archive.past.participants')}
+                </p>
+                {s.data.gallery.photos.length === 0 && (
+                  <p class="nophoto">{t('archive.past.nophoto')}</p>
+                )}
+                {s.data.aftermovie && (
+                  <a href={s.data.aftermovie} target="_blank" rel="noopener" class="aftermovie-link">
+                    {t('archive.past.aftermovie')}
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+        ))}
+      </>
+    ) : (
+      <p class="no-seasons">—</p>
+    )}
+  </div>
+</section>
+<script>
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.archive-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => { t.setAttribute('aria-selected', 'false'); });
+      tab.setAttribute('aria-selected', 'true');
+      document.querySelectorAll<HTMLElement>('.season-panel').forEach(p => { p.hidden = true; });
+      const panel = document.getElementById(`season-${tab.dataset.year}`);
+      if (panel) panel.hidden = false;
+    });
+  });
+</script>
+<style>
+  #archive {
+    padding: var(--space-xl) var(--space-l);
+    background: color-mix(in srgb, var(--color-bg) 97%, var(--color-text));
+  }
+  .archive-container {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-l);
+  }
+  header h2 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+  }
+  .archive-tabs {
+    display: flex;
+    gap: var(--space-s);
+    flex-wrap: wrap;
+  }
+  .archive-tab {
+    padding: 0.5rem 1rem;
+    border: 2px solid color-mix(in srgb, var(--color-text) 40%, transparent);
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.15s;
+  }
+  .archive-tab[aria-selected="true"] {
+    background: var(--color-accent);
+    color: #000;
+    border-color: var(--color-accent);
+    font-weight: 700;
+  }
+  .season-panel {
+    min-height: 4rem;
+  }
+  .season-upcoming {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+    align-items: flex-start;
+  }
+  .season-upcoming p {
+    opacity: 0.8;
+  }
+  .season-live {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-accent);
+  }
+  .season-past {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+  .winners-block h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: var(--space-s);
+  }
+  .winners-block ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  .participants-count {
+    opacity: 0.7;
+    font-size: 0.875rem;
+  }
+  .nophoto {
+    opacity: 0.5;
+    font-style: italic;
+  }
+  .aftermovie-link {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  .btn-primary {
+    background: var(--color-accent);
+    color: #000;
+  }
+  .no-seasons {
+    opacity: 0.4;
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+interface Props { current: string; }
+const { current } = Astro.props;
+const langs = [
+  { code: 'en', label: 'EN' },
+  { code: 'ru', label: 'RU' },
+  { code: 'vi', label: 'VI' },
+];
+---
+<nav class="lang-switcher" aria-label="Language">
+  {langs.map(l => (
+    <a
+      href={`/${l.code}/`}
+      class:list={['lang-link', { active: l.code === current }]}
+      hreflang={l.code}
+      aria-current={l.code === current ? 'true' : undefined}
+    >{l.label}</a>
+  ))}
+</nav>
+<style>
+  .lang-switcher { display: flex; gap: 0.5rem; }
+  .lang-link { opacity: 0.5; text-decoration: none; color: inherit; }
+  .lang-link.active { opacity: 1; font-weight: 700; }
+</style>

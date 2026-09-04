@@ -1,0 +1,200 @@
+---
+import type { Lang } from '../../i18n/utils';
+import { useTranslations } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+  status?: 'upcoming' | 'registration-open' | 'live' | 'past';
+}
+
+const { lang, status } = Astro.props;
+const t = useTranslations(lang);
+
+const isOpen = status === 'registration-open';
+---
+<section id="registration">
+  <div class="registration-container">
+    <header>
+      <h2>{t('registration.heading')}</h2>
+      <p class="registration-sub">{t('registration.subheading')}</p>
+    </header>
+
+    {isOpen ? (
+      <form action="#" method="GET" class="registration-form">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="firstName">{t('registration.field.firstName')}</label>
+            <input type="text" id="firstName" name="firstName" required autocomplete="given-name" />
+          </div>
+          <div class="form-field">
+            <label for="lastName">{t('registration.field.lastName')}</label>
+            <input type="text" id="lastName" name="lastName" required autocomplete="family-name" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="email">{t('registration.field.email')}</label>
+            <input type="email" id="email" name="email" required autocomplete="email" />
+          </div>
+          <div class="form-field">
+            <label for="phone">{t('registration.field.phone')}</label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel" />
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="country">{t('registration.field.country')}</label>
+          <input type="text" id="country" name="country" autocomplete="country-name" />
+        </div>
+        <div class="form-field">
+          <label for="category">{t('registration.field.category')}</label>
+          <select id="category" name="category" required>
+            <option value="">—</option>
+            <option value="pro-men">Pro Men</option>
+            <option value="pro-women">Pro Women</option>
+            <option value="amateur">Amateur</option>
+            <option value="junior">Junior (U18)</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="experience">{t('registration.field.experience')}</label>
+            <input type="number" id="experience" name="experience" min="0" max="50" />
+          </div>
+          <div class="form-field">
+            <label for="kiteSize">{t('registration.field.kiteSize')}</label>
+            <input type="number" id="kiteSize" name="kiteSize" min="3" max="25" step="0.5" />
+          </div>
+        </div>
+        <div class="form-field form-field--checkbox">
+          <input type="checkbox" id="consent" name="consent" required />
+          <label for="consent">{t('registration.field.consent')}</label>
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary"
+          disabled
+          title="Coming in Phase 3"
+        >
+          {t('registration.submit')}
+        </button>
+        <p class="registration-notice">{t('registration.notice')}</p>
+      </form>
+    ) : (
+      <div class="registration-closed">
+        <p>{t('registration.closed')}</p>
+      </div>
+    )}
+  </div>
+</section>
+<style>
+  #registration {
+    padding: var(--space-xl) var(--space-l);
+  }
+  .registration-container {
+    max-width: 640px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-l);
+  }
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+  }
+  h2 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+  }
+  .registration-sub {
+    opacity: 0.75;
+  }
+  .registration-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-m);
+  }
+  @media (max-width: 540px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+  }
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  .form-field label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    opacity: 0.85;
+  }
+  .form-field input,
+  .form-field select {
+    background: color-mix(in srgb, var(--color-bg) 80%, var(--color-text));
+    border: 1px solid color-mix(in srgb, var(--color-text) 25%, transparent);
+    border-radius: 4px;
+    padding: 0.625rem 0.75rem;
+    color: var(--color-text);
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    width: 100%;
+  }
+  .form-field input:focus,
+  .form-field select:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+  }
+  .form-field--checkbox {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-s);
+  }
+  .form-field--checkbox input[type="checkbox"] {
+    width: auto;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .form-field--checkbox label {
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    width: fit-content;
+  }
+  .btn-primary {
+    background: var(--color-accent);
+    color: #000;
+  }
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .registration-notice {
+    font-size: 0.8125rem;
+    opacity: 0.55;
+    font-style: italic;
+  }
+  .registration-closed {
+    padding: var(--space-l);
+    border: 2px dashed color-mix(in srgb, var(--color-text) 20%, transparent);
+    border-radius: 8px;
+  }
+  .registration-closed p {
+    opacity: 0.7;
+  }
+</style>

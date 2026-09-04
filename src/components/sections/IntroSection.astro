@@ -1,0 +1,79 @@
+---
+import type { Lang } from '../../i18n/utils';
+import { useTranslations } from '../../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+---
+<section id="intro">
+  <div class="intro-container">
+    <header class="intro-header">
+      <h2>{t('intro.heading')}</h2>
+    </header>
+    <div class="intro-body">
+      <p>{t('intro.body1')}</p>
+      <p>{t('intro.body2')}</p>
+    </div>
+    <div class="intro-stats">
+      <article class="stat">
+        <span class="stat-value">{t('intro.stat.year.value')}</span>
+        <span class="stat-label">{t('intro.stat.year.label')}</span>
+      </article>
+      <article class="stat">
+        <span class="stat-value">{t('intro.stat.participants.value')}</span>
+        <span class="stat-label">{t('intro.stat.participants.label')}</span>
+      </article>
+      <article class="stat">
+        <span class="stat-value">{t('intro.stat.record.value')}</span>
+        <span class="stat-label">{t('intro.stat.record.label')}</span>
+      </article>
+    </div>
+  </div>
+</section>
+<style>
+  #intro {
+    padding: var(--space-xl) var(--space-l);
+    max-width: var(--container-max);
+    margin: 0 auto;
+  }
+  .intro-header {
+    margin-bottom: var(--space-l);
+  }
+  .intro-header h2 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 700;
+  }
+  .intro-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-m);
+    max-width: 720px;
+    margin-bottom: var(--space-xl);
+  }
+  .intro-stats {
+    display: flex;
+    gap: var(--space-xl);
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  .stat-value {
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--color-accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-label {
+    font-size: 0.875rem;
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>
