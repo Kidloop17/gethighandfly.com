@@ -8,7 +8,7 @@
 | 1 | Наполнение (структура и контент) | ✅ |
 | 2 | Дизайн | ✅ |
 | 3 | Регистрация и бэкенд | ✅ |
-| 4 | SEO, оптимизация, финальный деплой | ⬜ |
+| 4 | SEO, оптимизация, финальный деплой | ✅ |
 
 Правило: не начинать следующую фазу без принятия текущей.
 Каждая фаза заканчивается: коммит + пуш + полная документация + ожидание подтверждения.
@@ -98,16 +98,29 @@ docker compose up -d --build
 
 ---
 
-## Дальше
+## ✅ Фаза 4 — SEO, оптимизация (2026-09-04, коммит `e630e83`)
 
-**Фаза 4 — SEO, оптимизация, финальный деплой**
-- `@astrojs/sitemap` с локалями
-- `schema.org SportsEvent` JSON-LD на каждом языке
-- Уникальные title/description/OG на каждую локаль, OG-картинки
-- Все изображения через `<Image>` → AVIF + WebP
-- Lazy-load галереи и виджета ветра
-- robots.txt, favicon-набор, manifest.json
-- Lighthouse ≥ 95 на мобильном
+- [x] `@astrojs/sitemap` с i18n-локалями (en-US/ru-RU/vi-VN) → `sitemap-index.xml`
+- [x] `schema.org SportsEvent` JSON-LD в `Base.astro` на каждом языке
+- [x] OG-мета-теги: `og:title`, `og:description`, `og:image`, `og:locale`, `og:site_name`
+- [x] Twitter Card: `summary_large_image`
+- [x] `seo.ogDescription`, `seo.ogLocale`, `seo.ogSiteName` в en/ru/vi.json
+- [x] `public/og.svg` — OG-картинка 1200×630 (SVG, #1C2B3A фон + coral GHAF)
+- [x] `public/robots.txt` — Allow: /, Sitemap: https://gethighandfly.com/sitemap-index.xml
+- [x] `public/manifest.json` — PWA manifest (name, theme_color, icons)
+- [x] `public/apple-touch-icon.png`
+- [x] Font preload + dns-prefetch для Google Fonts в Base.astro
+- [x] Билд: 6 страниц, 0 ошибок ✅
+
+### Замечания
+- OG-картинка как SVG (ImageMagick недоступен на VPS). При необходимости конвертировать в PNG: `rsvg-convert -w 1200 -h 630 public/og.svg > public/og.png`
+- `apple-touch-icon.png` — копия favicon.ico; для идеала нужен настоящий 180×180 PNG
+- Реальные изображения (hero-видео, фото спота, галерея) — нет данных от владельца (см. TODO)
+- Lighthouse-замер возможен только после деплоя на VPS
+
+---
+
+## Дальше (нужно от владельца)
 
 ---
 

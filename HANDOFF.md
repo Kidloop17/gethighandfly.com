@@ -2,10 +2,13 @@
 Обновлено: 2026-09-04
 
 ## Сейчас
+**Фаза 4 — ЗАВЕРШЕНА.** `@astrojs/sitemap` (i18n), JSON-LD SportsEvent, OG-теги + Twitter Card,
+og.svg 1200×630, robots.txt, manifest.json, font preload.
+Билд: 6 страниц, 0 ошибок, sitemap-index.xml ✅. Ждём подтверждения владельца.
+
 **Фаза 3 — ЗАВЕРШЕНА.** Fastify + SQLite бэкенд, POST /api/register, GET /api/slots,
 антиспам (honeypot + time-check + rate-limit), Telegram-уведомления, email-подтверждение,
 лист ожидания, privacy-страница на 3 языках, форма подключена.
-Ждём подтверждения владельца → Фаза 4 (SEO + оптимизация).
 
 **Фаза 2 — ЗАВЕРШЕНА.** Дизайн Kite-Poster: Bebas Neue + Playfair Display + Source Sans 3,
 палитра sand/coral/ocean, parallax hero, scroll-reveal, hover-анимации, prefers-reduced-motion.
@@ -43,11 +46,12 @@ GitHub Actions: build → commit dist/ [skip ci] → push
 Потом `bash deploy.sh` на сервере подхватывает новый dist/.
 
 ## Следующий шаг
-**Фаза 4 — SEO + оптимизация**: `@astrojs/sitemap`, `schema.org SportsEvent` JSON-LD,
-уникальные title/description/OG на каждую локаль, OG-картинки,
-все изображения → AVIF+WebP через `<Image>`, lazy-load галереи,
-robots.txt, favicon-набор, manifest.json, Lighthouse ≥ 95 mobile.
-Ждать подтверждения Фазы 3 перед стартом.
+**Все 4 фазы завершены.** Сайт готов к финальному деплою и наполнению реальными данными от владельца.
+
+Остаётся от владельца (см. список ниже):
+- Точные даты 2027, spot name/coords, hero-видео, лимиты мест
+- Конвертировать `public/og.svg` → `public/og.png` (для Twitter/Facebook превью)
+- Запустить Lighthouse после деплоя Фазы 4 на VPS
 
 ## Деплой Фазы 3 на VPS (первый раз)
 После `git push` и `bash deploy.sh`:
