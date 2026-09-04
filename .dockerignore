@@ -1,0 +1,16 @@
+src/
+public/
+node_modules/
+.git/
+.github/
+.astro/
+.claude/
+docs/
+caddy/
+server/
+*.md
+*.mjs
+*.ts
+*.json
+!dist/
+!nginx.conf

@@ -1,5 +1,4 @@
-# build output
-dist/
+# build output — dist/ коммитится в git для деплоя через git pull + docker
 # generated types
 .astro/
 
