@@ -11,14 +11,16 @@ const t = useTranslations(lang);
 
 const CATEGORIES = ['pro_men', 'pro_women', 'amateur', 'junior'] as const;
 ---
+<div class="stripe-ocean" aria-hidden="true"></div>
 <section id="disciplines">
   <div class="disciplines-container">
-    <header>
+    <header class="reveal">
       <h2>{t('disciplines.heading')}</h2>
     </header>
-    <div class="categories-grid">
-      {CATEGORIES.map(cat => (
+    <div class="categories-grid reveal">
+      {CATEGORIES.map((cat, idx) => (
         <article class="category-card">
+          <span class="cat-num">{String(idx + 1).padStart(2, '0')}</span>
           <h3>{t(`disciplines.${cat}.title`)}</h3>
           <p>{t(`disciplines.${cat}.desc`)}</p>
           <footer class="card-footer">
@@ -30,53 +32,98 @@ const CATEGORIES = ['pro_men', 'pro_women', 'amateur', 'junior'] as const;
     </div>
   </div>
 </section>
+
 <style>
   #disciplines {
-    padding: var(--space-xl) var(--space-l);
-    background: color-mix(in srgb, var(--color-bg) 95%, var(--color-accent));
+    background: var(--color-bg);
+    padding: var(--section-padding);
   }
+
   .disciplines-container {
-    max-width: var(--container-max);
+    max-width: var(--container-width);
     margin: 0 auto;
   }
+
   header {
     margin-bottom: var(--space-l);
   }
+
   h2 {
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    color: var(--color-text);
+    text-transform: uppercase;
   }
+
   .categories-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-m);
   }
+
+  @media (max-width: 640px) {
+    .categories-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .category-card {
-    border: 1px solid color-mix(in srgb, var(--color-text) 20%, transparent);
-    border-radius: 8px;
+    border: 2px solid var(--color-ocean);
+    border-radius: var(--radius);
     padding: var(--space-l);
     display: flex;
     flex-direction: column;
     gap: var(--space-s);
+    background: var(--color-bg-alt);
+    box-shadow: var(--shadow-card);
+    transition: transform var(--transition), box-shadow var(--transition);
+    position: relative;
+    overflow: hidden;
   }
-  .category-card h3 {
-    font-size: 1.25rem;
-    font-weight: 700;
+
+  .category-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .category-card:hover {
+      transform: none;
+    }
+  }
+
+  .cat-num {
+    font-family: var(--font-mono);
+    font-size: 2rem;
     color: var(--color-accent);
+    opacity: 0.6;
+    line-height: 1;
   }
+
+  .category-card h3 {
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    color: var(--color-text);
+    text-transform: uppercase;
+  }
+
   .category-card p {
+    font-family: var(--font-body);
     flex: 1;
-    opacity: 0.85;
+    color: var(--color-text-muted);
     line-height: var(--line-height-base);
+    font-size: var(--text-body);
   }
+
   .card-footer {
     margin-top: var(--space-m);
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
-    font-size: 0.875rem;
-    opacity: 0.6;
-    border-top: 1px solid color-mix(in srgb, var(--color-text) 15%, transparent);
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    color: var(--color-text-muted);
+    border-top: 1px solid rgba(26, 82, 118, 0.2);
     padding-top: var(--space-s);
   }
 </style>

@@ -1,17 +1,23 @@
 :root {
-  /* Цвета — TODO: определить в Фазе 2 */
-  --color-bg: #0a0a0a;
-  --color-text: #f5f5f5;
-  --color-accent: #00d4ff;
-  --color-accent-2: #ff6b35;
+  /* Fonts */
+  --font-display: 'Bebas Neue', Impact, sans-serif;
+  --font-accent: 'Playfair Display', Georgia, serif;
+  --font-body: 'Source Sans 3', system-ui, sans-serif;
+  --font-mono: 'Courier New', 'Roboto Mono', monospace;
 
-  /* Типографика */
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-  --font-size-base: 1rem;
-  --line-height-base: 1.6;
+  /* Colors */
+  --color-bg: #F5E9CC;
+  --color-bg-alt: #FAF4E4;
+  --color-bg-dark: #1C2B3A;
+  --color-text: #1C2B3A;
+  --color-text-muted: #4A5D6E;
+  --color-text-on-dark: #F5E9CC;
+  --color-accent: #E8522A;
+  --color-accent-hover: #C9401C;
+  --color-ocean: #1A5276;
+  --color-ocean-hover: #154566;
 
-  /* Отступы */
+  /* Spacing */
   --space-xs: 0.25rem;
   --space-s: 0.5rem;
   --space-m: 1rem;
@@ -19,8 +25,29 @@
   --space-xl: 4rem;
   --space-2xl: 8rem;
 
-  /* Контейнер */
+  /* Layout */
+  --container-width: 1200px;
   --container-max: 1200px;
+  --section-padding: var(--space-2xl) var(--space-l);
+
+  /* Typography scale */
+  --text-hero: clamp(4rem, 12vw, 10rem);
+  --text-h1: clamp(2.5rem, 6vw, 5rem);
+  --text-h2: clamp(1.75rem, 4vw, 3rem);
+  --text-h3: clamp(1.25rem, 2.5vw, 1.75rem);
+  --text-body: 1.125rem;
+  --text-small: 0.875rem;
+
+  /* Effects */
+  --shadow-card: 0 4px 24px rgba(28,43,58,0.12);
+  --shadow-hover: 0 8px 32px rgba(28,43,58,0.2);
+  --radius: 4px;
+  --transition: 200ms ease;
+
+  /* Legacy aliases */
+  --font-sans: var(--font-body);
+  --font-size-base: 1rem;
+  --line-height-base: 1.6;
   --container-padding: var(--space-m);
 }
 
@@ -32,7 +59,7 @@
 }
 
 html {
-  font-family: var(--font-sans);
+  font-family: var(--font-body);
   font-size: var(--font-size-base);
   line-height: var(--line-height-base);
   color: var(--color-text);
@@ -49,6 +76,3 @@ img, video {
   height: auto;
   display: block;
 }
-
-/* Self-hosted шрифты: TODO Фаза 2 (добавить после выбора дизайна) */
-/* @font-face { ... } */

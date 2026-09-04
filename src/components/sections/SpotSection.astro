@@ -9,12 +9,13 @@ interface Props {
 const { lang } = Astro.props;
 const t = useTranslations(lang);
 ---
+<div class="stripe-coral" aria-hidden="true"></div>
 <section id="spot">
   <div class="spot-container">
-    <header>
+    <header class="reveal">
       <h2>{t('spot.heading')}</h2>
     </header>
-    <div class="spot-content">
+    <div class="spot-content reveal">
       <div class="spot-text">
         <p>{t('spot.body')}</p>
         <div class="wind-block">
@@ -23,66 +24,96 @@ const t = useTranslations(lang);
         </div>
       </div>
       <div class="spot-visuals">
-        <div class="placeholder-block map-placeholder">
-          <p>TODO: Map embed</p>
-          <small>{t('spot.map.caption')}</small>
-        </div>
         <div class="placeholder-block video-placeholder">
+          <div class="play-icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="48" height="48" fill="none">
+              <circle cx="24" cy="24" r="22" stroke="#E8522A" stroke-width="2"/>
+              <polygon points="19,14 36,24 19,34" fill="#E8522A" />
+            </svg>
+          </div>
           <p>TODO: Spot video</p>
           <small>{t('spot.forecast.label')}</small>
+        </div>
+        <div class="placeholder-block map-placeholder">
+          <svg viewBox="0 0 48 48" width="36" height="36" fill="none" aria-hidden="true">
+            <circle cx="24" cy="20" r="8" stroke="#1A5276" stroke-width="2"/>
+            <path d="M24 28 C24 28 10 40 10 44 H38 C38 40 24 28 24 28Z" fill="#1A5276" fill-opacity="0.25"/>
+            <circle cx="24" cy="20" r="3" fill="#1A5276"/>
+          </svg>
+          <p>TODO: Map embed</p>
+          <small>{t('spot.map.caption')}</small>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 <style>
   #spot {
-    padding: var(--space-xl) var(--space-l);
+    background: var(--color-bg-dark);
+    color: var(--color-text-on-dark);
+    padding: var(--section-padding);
   }
+
   .spot-container {
-    max-width: var(--container-max);
+    max-width: var(--container-width);
     margin: 0 auto;
   }
+
   header {
     margin-bottom: var(--space-l);
   }
+
   h2 {
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    color: var(--color-text-on-dark);
+    text-transform: uppercase;
   }
+
   .spot-content {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--space-xl);
+    align-items: start;
   }
+
   @media (max-width: 768px) {
     .spot-content {
       grid-template-columns: 1fr;
     }
   }
+
   .spot-text {
     display: flex;
     flex-direction: column;
     gap: var(--space-l);
   }
+
   .spot-text p {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text-on-dark);
     opacity: 0.85;
     line-height: var(--line-height-base);
   }
+
   .wind-block h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: var(--space-s);
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
     color: var(--color-accent);
+    text-transform: uppercase;
+    margin-bottom: var(--space-s);
   }
+
   .spot-visuals {
     display: flex;
     flex-direction: column;
     gap: var(--space-m);
   }
+
   .placeholder-block {
-    border: 2px dashed color-mix(in srgb, var(--color-text) 20%, transparent);
-    border-radius: 8px;
+    border-radius: var(--radius);
     padding: var(--space-l);
     min-height: 200px;
     display: flex;
@@ -92,12 +123,30 @@ const t = useTranslations(lang);
     gap: var(--space-s);
     text-align: center;
   }
+
+  .video-placeholder {
+    border: 2px solid var(--color-accent);
+  }
+
+  .map-placeholder {
+    border: 2px solid var(--color-ocean);
+  }
+
   .placeholder-block p {
-    opacity: 0.4;
+    font-family: var(--font-body);
+    color: var(--color-text-on-dark);
+    opacity: 0.5;
     font-size: 1rem;
   }
+
   .placeholder-block small {
-    opacity: 0.5;
-    font-size: 0.75rem;
+    font-family: var(--font-body);
+    color: var(--color-text-on-dark);
+    opacity: 0.35;
+    font-size: var(--text-small);
+  }
+
+  .play-icon {
+    margin-bottom: var(--space-xs);
   }
 </style>

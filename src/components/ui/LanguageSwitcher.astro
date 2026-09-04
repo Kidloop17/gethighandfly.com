@@ -18,7 +18,29 @@ const langs = [
   ))}
 </nav>
 <style>
-  .lang-switcher { display: flex; gap: 0.5rem; }
-  .lang-link { opacity: 0.5; text-decoration: none; color: inherit; }
-  .lang-link.active { opacity: 1; font-weight: 700; }
+  .lang-switcher {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .lang-link {
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    font-weight: 600;
+    text-decoration: none;
+    color: inherit;
+    opacity: 0.45;
+    padding: 0.2rem 0.4rem;
+    border-radius: var(--radius);
+    transition: opacity var(--transition), color var(--transition);
+  }
+
+  .lang-link:hover {
+    opacity: 0.85;
+  }
+
+  .lang-link.active {
+    opacity: 1;
+    color: var(--color-accent);
+  }
 </style>

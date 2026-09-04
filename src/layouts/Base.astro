@@ -38,6 +38,10 @@ const locales = ['en', 'ru', 'vi'];
       />
     ))}
     <link rel="alternate" hreflang="x-default" href={new URL('/en/', siteBase)} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet" />
   </head>
   <body>
     <header class="site-nav">
@@ -49,8 +53,69 @@ const locales = ['en', 'ru', 'vi'];
       <LanguageSwitcher current={lang} />
     </header>
     <slot />
+    <script>
+      // Scroll-reveal (runs once on page load)
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('revealed');
+            revealObserver.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    </script>
   </body>
 </html>
+<style is:global>
+  body {
+    font-family: var(--font-body);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: var(--text-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+  }
+
+  /* Scroll-reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* Focus ring */
+  :focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  /* Section divider stripes */
+  .stripe-coral {
+    height: 4px;
+    background: var(--color-accent);
+  }
+  .stripe-ocean {
+    height: 4px;
+    background: var(--color-ocean);
+  }
+</style>
 <style>
   .site-nav {
     position: sticky;
@@ -60,16 +125,15 @@ const locales = ['en', 'ru', 'vi'];
     align-items: center;
     gap: var(--space-l);
     padding: var(--space-m) var(--space-l);
-    background: color-mix(in srgb, var(--color-bg) 90%, transparent);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid color-mix(in srgb, var(--color-text) 8%, transparent);
+    background: var(--color-bg-dark);
+    border-bottom: 1px solid rgba(245,233,204,0.08);
   }
   .site-logo {
-    font-size: 1.25rem;
-    font-weight: 900;
-    letter-spacing: 0.05em;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    letter-spacing: 0.08em;
     text-decoration: none;
-    color: var(--color-text);
+    color: var(--color-accent);
     flex-shrink: 0;
   }
   .site-nav-links {
@@ -79,20 +143,36 @@ const locales = ['en', 'ru', 'vi'];
     margin-left: auto;
   }
   .site-nav-links a {
-    color: var(--color-text);
+    font-family: var(--font-body);
+    color: var(--color-text-on-dark);
     text-decoration: none;
     opacity: 0.75;
     font-size: 0.9375rem;
+    font-weight: 600;
+    transition: opacity var(--transition);
   }
   .site-nav-links a:hover {
     opacity: 1;
   }
   .btn-nav {
-    background: var(--color-accent);
-    color: #000 !important;
+    background: var(--color-accent) !important;
+    color: #fff !important;
     opacity: 1 !important;
     padding: 0.4rem 1rem;
-    border-radius: 4px;
+    border-radius: var(--radius);
     font-weight: 600;
+    transition: background var(--transition) !important;
+  }
+  .btn-nav:hover {
+    background: var(--color-accent-hover) !important;
+  }
+
+  @media (max-width: 600px) {
+    .site-nav-links a:not(.btn-nav) {
+      display: none;
+    }
+    .site-nav {
+      gap: var(--space-m);
+    }
   }
 </style>

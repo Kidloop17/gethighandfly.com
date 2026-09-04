@@ -11,8 +11,9 @@ const { lang } = Astro.props;
 const t = useTranslations(lang);
 const seasons = (await getCollection('seasons')).sort((a, b) => b.data.year - a.data.year);
 ---
+<div class="stripe-coral" aria-hidden="true"></div>
 <section id="archive">
-  <div class="archive-container">
+  <div class="archive-container reveal">
     <header>
       <h2>{t('archive.heading')}</h2>
     </header>
@@ -56,13 +57,18 @@ const seasons = (await getCollection('seasons')).sort((a, b) => b.data.year - a.
                     <h3>{t('archive.past.winners')}</h3>
                     <ul>
                       {s.data.winners.map(w => (
-                        <li>{w.category}: {w.name} — {w.height}m</li>
+                        <li>
+                          <span class="winner-category">{w.category}</span>
+                          <span class="winner-name">{w.name}</span>
+                          <span class="winner-height">{w.height}<span class="winner-unit">m</span></span>
+                        </li>
                       ))}
                     </ul>
                   </div>
                 )}
                 <p class="participants-count">
-                  {s.data.participantsCount} {t('archive.past.participants')}
+                  <span class="participants-num">{s.data.participantsCount}</span>
+                  {t('archive.past.participants')}
                 </p>
                 {s.data.gallery.photos.length === 0 && (
                   <p class="nophoto">{t('archive.past.nophoto')}</p>
@@ -82,6 +88,7 @@ const seasons = (await getCollection('seasons')).sort((a, b) => b.data.year - a.
     )}
   </div>
 </section>
+
 <script>
   const tabs = document.querySelectorAll<HTMLButtonElement>('.archive-tab');
   tabs.forEach(tab => {
@@ -94,100 +101,206 @@ const seasons = (await getCollection('seasons')).sort((a, b) => b.data.year - a.
     });
   });
 </script>
+
 <style>
   #archive {
-    padding: var(--space-xl) var(--space-l);
-    background: color-mix(in srgb, var(--color-bg) 97%, var(--color-text));
+    background: var(--color-bg-dark);
+    color: var(--color-text-on-dark);
+    padding: var(--section-padding);
   }
+
   .archive-container {
-    max-width: var(--container-max);
+    max-width: var(--container-width);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: var(--space-l);
   }
+
   header h2 {
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    color: var(--color-text-on-dark);
+    text-transform: uppercase;
   }
+
   .archive-tabs {
     display: flex;
     gap: var(--space-s);
     flex-wrap: wrap;
   }
+
   .archive-tab {
-    padding: 0.5rem 1rem;
-    border: 2px solid color-mix(in srgb, var(--color-text) 40%, transparent);
+    padding: 0.5rem 1.25rem;
+    border: 2px solid var(--color-accent);
     background: transparent;
-    color: var(--color-text);
+    color: var(--color-text-on-dark);
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
     font-size: 1rem;
-    transition: border-color 0.15s;
+    transition: background var(--transition), color var(--transition);
   }
+
+  .archive-tab:hover {
+    background: rgba(232, 82, 42, 0.15);
+  }
+
   .archive-tab[aria-selected="true"] {
     background: var(--color-accent);
-    color: #000;
+    color: #fff;
     border-color: var(--color-accent);
     font-weight: 700;
   }
+
   .season-panel {
     min-height: 4rem;
   }
+
   .season-upcoming {
     display: flex;
     flex-direction: column;
     gap: var(--space-m);
     align-items: flex-start;
   }
+
   .season-upcoming p {
+    font-family: var(--font-body);
+    color: var(--color-text-on-dark);
     opacity: 0.8;
   }
+
   .season-live {
-    font-size: 1.25rem;
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
     color: var(--color-accent);
+    text-transform: uppercase;
   }
+
   .season-past {
     display: flex;
     flex-direction: column;
     gap: var(--space-m);
   }
+
   .winners-block h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
+    font-family: var(--font-display);
+    font-size: var(--text-h3);
+    color: var(--color-text-on-dark);
+    text-transform: uppercase;
     margin-bottom: var(--space-s);
   }
+
   .winners-block ul {
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs);
+    gap: var(--space-s);
   }
+
+  .winners-block li {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-m);
+    font-family: var(--font-body);
+    padding: var(--space-s) 0;
+    border-bottom: 1px solid rgba(245,233,204,0.1);
+  }
+
+  .winner-category {
+    font-size: var(--text-small);
+    color: var(--color-text-on-dark);
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+
+  .winner-name {
+    flex: 1;
+    color: var(--color-text-on-dark);
+    font-size: var(--text-body);
+  }
+
+  .winner-height {
+    font-family: var(--font-mono);
+    font-size: var(--text-h3);
+    color: var(--color-accent);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+
+  .winner-unit {
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    opacity: 0.6;
+    margin-left: 2px;
+  }
+
   .participants-count {
+    font-family: var(--font-body);
+    color: var(--color-text-on-dark);
     opacity: 0.7;
-    font-size: 0.875rem;
+    font-size: var(--text-small);
   }
+
+  .participants-num {
+    font-family: var(--font-mono);
+    font-size: var(--text-h3);
+    color: var(--color-text-on-dark);
+    opacity: 1;
+    margin-right: var(--space-s);
+    vertical-align: baseline;
+  }
+
   .nophoto {
+    font-family: var(--font-body);
+    color: var(--color-text-on-dark);
     opacity: 0.5;
     font-style: italic;
   }
+
   .aftermovie-link {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
     color: var(--color-accent);
     text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color var(--transition);
   }
+
+  .aftermovie-link:hover {
+    color: var(--color-text-on-dark);
+  }
+
   .btn {
     display: inline-block;
-    padding: 0.75rem 1.5rem;
+    padding: 0.875rem 2rem;
     text-decoration: none;
-    border-radius: 4px;
-    font-weight: 600;
+    border-radius: var(--radius);
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    letter-spacing: 0.06em;
+    transition: background var(--transition), border-color var(--transition);
   }
+
   .btn-primary {
     background: var(--color-accent);
-    color: #000;
+    color: #fff;
+    border: 2px solid var(--color-accent);
   }
+
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+    border-color: var(--color-accent-hover);
+  }
+
   .no-seasons {
+    font-family: var(--font-body);
+    color: var(--color-text-on-dark);
     opacity: 0.4;
   }
 </style>

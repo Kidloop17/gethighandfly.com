@@ -12,8 +12,9 @@ const t = useTranslations(lang);
 
 const isOpen = status === 'registration-open';
 ---
+<div class="stripe-ocean" aria-hidden="true"></div>
 <section id="registration">
-  <div class="registration-container">
+  <div class="registration-container reveal">
     <header>
       <h2>{t('registration.heading')}</h2>
       <p class="registration-sub">{t('registration.subheading')}</p>
@@ -81,120 +82,163 @@ const isOpen = status === 'registration-open';
       </form>
     ) : (
       <div class="registration-closed">
-        <p>{t('registration.closed')}</p>
+        <p class="closed-text">{t('registration.closed')}</p>
       </div>
     )}
   </div>
 </section>
+
 <style>
   #registration {
-    padding: var(--space-xl) var(--space-l);
+    background: var(--color-bg);
+    padding: var(--section-padding);
   }
+
   .registration-container {
-    max-width: 640px;
+    max-width: 680px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
     gap: var(--space-l);
   }
+
   header {
     display: flex;
     flex-direction: column;
     gap: var(--space-s);
   }
+
   h2 {
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    font-weight: 700;
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    color: var(--color-text);
+    text-transform: uppercase;
   }
+
   .registration-sub {
-    opacity: 0.75;
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    color: var(--color-text-muted);
+    line-height: var(--line-height-base);
   }
+
   .registration-form {
     display: flex;
     flex-direction: column;
     gap: var(--space-m);
   }
+
   .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--space-m);
   }
+
   @media (max-width: 540px) {
     .form-row {
       grid-template-columns: 1fr;
     }
   }
+
   .form-field {
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
   }
+
   .form-field label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    opacity: 0.85;
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    font-weight: 600;
+    color: var(--color-text-muted);
   }
+
   .form-field input,
   .form-field select {
-    background: color-mix(in srgb, var(--color-bg) 80%, var(--color-text));
-    border: 1px solid color-mix(in srgb, var(--color-text) 25%, transparent);
-    border-radius: 4px;
+    background: var(--color-bg-alt);
+    border: 2px solid var(--color-ocean);
+    border-radius: var(--radius);
     padding: 0.625rem 0.75rem;
     color: var(--color-text);
     font-size: 1rem;
-    font-family: var(--font-sans);
+    font-family: var(--font-body);
     width: 100%;
+    transition: border-color var(--transition);
   }
+
   .form-field input:focus,
   .form-field select:focus {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 1px;
+    outline: none;
+    border-color: var(--color-accent);
   }
+
   .form-field--checkbox {
     flex-direction: row;
     align-items: flex-start;
     gap: var(--space-s);
   }
+
   .form-field--checkbox input[type="checkbox"] {
     width: auto;
     flex-shrink: 0;
-    margin-top: 2px;
+    margin-top: 3px;
+    accent-color: var(--color-accent);
   }
+
   .form-field--checkbox label {
-    font-size: 0.875rem;
+    font-size: var(--text-small);
     cursor: pointer;
   }
+
   .btn {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
+    display: block;
+    width: 100%;
+    padding: 1rem 2rem;
     text-decoration: none;
-    border-radius: 4px;
-    font-weight: 600;
+    border-radius: var(--radius);
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    letter-spacing: 0.06em;
     border: none;
     cursor: pointer;
-    font-size: 1rem;
-    font-family: var(--font-sans);
-    width: fit-content;
+    text-align: center;
+    transition: background var(--transition);
   }
+
   .btn-primary {
     background: var(--color-accent);
-    color: #000;
+    color: #fff;
   }
+
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-accent-hover);
+  }
+
   .btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
+
   .registration-notice {
+    font-family: var(--font-body);
     font-size: 0.8125rem;
-    opacity: 0.55;
+    color: var(--color-text-muted);
     font-style: italic;
+    text-align: center;
   }
+
   .registration-closed {
-    padding: var(--space-l);
-    border: 2px dashed color-mix(in srgb, var(--color-text) 20%, transparent);
-    border-radius: 8px;
+    padding: var(--space-xl);
+    border: 2px dashed rgba(28, 43, 58, 0.2);
+    border-radius: var(--radius);
+    text-align: center;
   }
-  .registration-closed p {
-    opacity: 0.7;
+
+  .closed-text {
+    font-family: var(--font-display);
+    font-size: var(--text-h2);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    line-height: 1.2;
   }
 </style>
