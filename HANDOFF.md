@@ -1,29 +1,44 @@
-# gethighandfly — HANDOFF
+# Get High And Fly — HANDOFF
 Обновлено: 2026-09-04
 
 ## Сейчас
-Фаза 0 — старт проекта. Создана документация по стандарту DOC_STANDARD.
-Репозиторий пустой: структура, стек и фазы зафиксированы, код не написан.
+Фаза 0 (Фундамент) — не начата. Документация обновлена по финальному CLAUDE.md:
+стек пересмотрен (нет Tailwind, нет Docker/nginx → Caddy + rsync + GitHub Actions),
+добавлен бэкенд Fastify + SQLite как отдельный сервис, Content Collections вместо Website Factory.
 
 ## Следующий шаг
-Фаза 1 — создать Astro-скелет проекта по образцу `../kitemuine/`:
-`npm create astro@latest` (или скопировать `package.json`, `astro.config.ts`,
-`tailwind.config.mjs`, `tsconfig.json`), настроить `src/` структуру,
-Dockerfile, nginx.conf, docker-compose.yml.
+Начать Фазу 0:
+1. `npm create astro@latest` — TypeScript strict, minimal template
+2. Настроить структуру папок по `docs/ARCHITECTURE.md`
+3. Добавить i18n-конфиг в `astro.config.mjs` (locales: en/ru/vi, prefixDefaultLocale: true)
+4. Написать `src/i18n/utils.ts` (useTranslations, getLangFromUrl)
+5. Настроить redirect на / через Caddy (Accept-Language → 302) + cookie для ручного выбора
+6. hreflang + x-default в BaseLayout
+7. Self-hosted шрифты, reset CSS
+8. Первый деплой пустой страницы
 
-## Нужно от владельца
-- [ ] **ADR-002**: как реализовать регистрацию участников — статичная форма
-  (Tally/Google Forms) или Astro SSR + API endpoint? Без этого решения
-  фазу 3 начинать нельзя.
-- [ ] **Порт**: какой APP_PORT для docker-compose? (kitemuine = 8081, vietnam-kitesurfing = 8080)
-- [ ] **Домен и хостинг**: где будет хоститься, нужен ли отдельный nginx proxy entry?
+Критерий готовности Фазы 0: `/en/`, `/ru/`, `/vi/` открываются, редирект работает, деплой проходит.
+
+## Нужно от владельца (блокирует работу)
+- [ ] Точные даты сезона 2027
+- [ ] Название и координаты спота
+- [ ] Видео для hero-секции и секции спота (WebM + MP4)
+- [ ] Список дисциплин (только big air или ещё?)
+- [ ] Размер стартового взноса и что входит
+- [ ] Лимит мест по категориям (pro-men, pro-women, amateur, junior)
+- [ ] Данные прошлых сезонов: годы, победители, кол-во участников, фото
+- [ ] Логотипы партнёров + их тиры
+- [ ] Контакты, соцсети, Telegram-канал
+- [ ] Логотип GHAF в векторе
+- [ ] Адрес VPS и данные для GitHub Actions rsync (для деплоя Фазы 0)
 
 ## Ловушки
-- `../kitemuine/` — образец архитектуры, но он `output: 'static'` без API.
-  gethighandfly с регистрацией потребует либо SSR, либо внешний сервис.
-  Не копировать слепо — сначала ADR-002.
-- Website Factory генерирует контент под определённую структуру страниц —
-  согласовать шаблоны страниц до запуска генерации.
+- Вьетнамский и русский текст длиннее английского на 20–30% — макет должен это держать.
+  Проверять на строке «Đường bờ biển · Ветер · Big Air» при выборе шрифтов.
+- `prefixDefaultLocale: true` → английская версия на `/en/`, корень `/` — только редирект.
+  Не ломать canonical-ссылки и sitemap на это.
+- Бэкенд (`/server/`) — отдельный процесс, не часть Astro-сборки. Не тянуть server-код в src/.
+- Счётчик мест (`GET /api/slots`) — кэш 60 сек. Не делать прямые запросы к SQLite из фронта.
 
 ## Файлы в работе
-- пока нет (фаза 0)
+- пока нет (Фаза 0 не начата)

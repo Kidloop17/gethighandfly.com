@@ -1,64 +1,113 @@
-# gethighandfly — Архитектура
+# Get High And Fly — Архитектура
 
-> Описывает **текущее** (планируемое) состояние. История решений — в DECISIONS.md.
+> Текущее состояние. История решений — в `docs/DECISIONS.md`.
 
 ## Карта директорий
 
 ```
-gethighandfly/
+/
+├── astro.config.mjs
 ├── src/
-│   ├── components/       # Astro/TSX компоненты (Header, Footer, Gallery, …)
-│   ├── layouts/          # BaseLayout.astro — обёртка для всех страниц
-│   ├── pages/            # маршруты: index.astro, register.astro, results.astro, …
-│   ├── i18n/             # переводы: ui.ts — единственный источник копи
-│   └── styles/           # глобальные стили (если нужны помимо Tailwind)
-├── public/               # статика: robots.txt, favicon, og-images
-├── dist/                 # артефакт сборки (gitignored)
-├── scripts/              # вспомогательные скрипты (generate-og, …)
-├── Dockerfile            # nginx:alpine, копирует dist/
-├── nginx.conf            # конфиг сервера
-├── docker-compose.yml    # production-запуск
-├── astro.config.ts
-├── tailwind.config.mjs
-├── tsconfig.json
-└── package.json
+│   ├── content/
+│   │   ├── config.ts            # схемы коллекций (zod)
+│   │   ├── seasons/             # 2024.json, 2025.json, 2026.json, 2027.json
+│   │   ├── categories/          # категории участников
+│   │   ├── partners/            # партнёры и спонсоры
+│   │   ├── volunteers/          # волонтёры
+│   │   └── spot/                # ru.md, en.md, vi.md
+│   ├── i18n/
+│   │   ├── ru.json  en.json  vi.json
+│   │   └── utils.ts             # useTranslations(lang), getLangFromUrl(url)
+│   ├── components/
+│   │   ├── sections/            # Hero, Intro, Categories, Spot, Partners,
+│   │   │                        # Volunteers, Archive, Register, Footer
+│   │   └── ui/                  # Button, LangSwitcher, Countdown, Gallery
+│   ├── layouts/Base.astro
+│   ├── pages/[lang]/index.astro
+│   └── styles/tokens.css        # все цвета, шрифты, отступы — только здесь
+├── public/                      # видео, favicon, манифест, статика
+├── dist/                        # артефакт сборки (gitignored)
+└── server/                      # бэкенд форм (Фаза 3, отдельный npm-проект)
+    ├── package.json
+    ├── index.ts                 # Fastify app
+    ├── routes/register.ts
+    ├── routes/slots.ts
+    ├── db.ts                    # better-sqlite3
+    └── ghaf.service             # systemd unit
 ```
 
-## Поток данных
+## i18n-роутинг
 
 ```
-Website Factory scripts
-        │
-        ▼
-   src/content/ или src/pages/ (Markdown / .astro)
-        │
-   astro build
-        │
-        ▼
-      dist/  ──── Docker (nginx:alpine) ──── HTTPS (nginx proxy хоста)
+astro.config.mjs:
+  i18n:
+    locales: ['en', 'ru', 'vi']
+    defaultLocale: 'en'
+    routing: { prefixDefaultLocale: true }
 ```
 
-## Регистрация участников (не реализовано, ожидает ADR-002)
+- `/en/` — английская версия (default locale, с префиксом)
+- `/ru/` — русская версия
+- `/vi/` — вьетнамская версия
+- `/` — Caddy: редирект 302 по `Accept-Language` → нужный префикс
+  - Ручной выбор языка (LangSwitcher) → cookie `lang` → Caddy проверяет cookie перед редиректом
 
-Два возможных варианта:
-1. **Внешний сервис** (Tally / Google Forms) — embed в статичную страницу.
-   Нет бэкенда, нет API. Минус: ограниченный брендинг.
-2. **Astro SSR** (`output: 'server'`) + API endpoint `/api/register.ts`.
-   Нужен node/Bun adapter, хранение данных (TODO: БД или spreadsheet?).
+## Поток данных (build-time)
 
-До принятия ADR-002: страница-заглушка `/register` с TODO.
+```
+src/content/seasons/*.json
+src/content/categories/*.json
+src/content/spot/*.md
+        │
+   Astro Content Collections (zod-валидация)
+        │
+   [lang]/index.astro → секции → компоненты
+        │
+   astro build → dist/ (чистая статика)
+        │
+   GitHub Actions: rsync dist/ → VPS /var/www/ghaf/
+        │
+   Caddy: serve + HTTPS + Brotli + кэш-заголовки
+```
+
+## Поток данных (runtime: форма регистрации)
+
+```
+Browser → POST /api/register
+                │
+          Caddy proxy /api/* → server:3001
+                │
+          Fastify: zod validate → better-sqlite3 → 200/409
+                │
+          → Telegram webhook (организаторам)
+          → Email (участнику, 3 языка)
+```
+
+## Astro Islands (клиентский JS)
+
+| Компонент | Причина Island |
+|-----------|---------------|
+| `Countdown.astro` | Таймер, обновляется каждую секунду |
+| `Archive.astro` | Переключение табов без перезагрузки |
+| `Gallery.astro` | PhotoSwipe — требует DOM |
+| `Register.astro` | Форма + валидация + запрос к API |
+| `LangSwitcher.astro` | Устанавливает cookie при ручном выборе |
+
+Всё остальное — чистый Astro, нуль клиентского JS.
 
 ## Внешние интеграции
 
 | Сервис | Назначение | Точка отказа |
 |--------|-----------|--------------|
-| TODO: фото-хостинг | Галерея | TODO |
-| YouTube / Vimeo | Видео (embed) | Недоступность CDN |
-| TODO: email-сервис | Подтверждение регистрации | TODO |
-| `@astrojs/sitemap` | SEO-карта | нет (buildtime) |
+| Windguru / Windy iframe | Виджет ветра | Lazy-load; при недоступности — скрытый |
+| Telegram Bot API | Уведомления организаторов | Не блокирует ответ клиенту |
+| SMTP / email-сервис | Подтверждение участнику | TODO: выбрать сервис |
+| GitHub Actions | CI/CD: build → rsync | — |
 
 ## Инварианты системы
 
-- `dist/` не хранит состояние — только статика; при деплое всегда пересобирается
-- `src/i18n/ui.ts` — единственный источник всех текстов; не хардкодить строки в компонентах
-- Конфиг Astro: `trailingSlash: 'always'` (как у kitemuine — для nginx совместимости)
+- `src/styles/tokens.css` — единственный источник CSS-переменных. Не дублировать значения.
+- `src/i18n/*.json` — единственный источник UI-текстов. Удаление `ru.json` не ломает сборку.
+- `server/` — изолированный npm-проект. Не импортировать из `src/`.
+- Контент в `src/content/` валидируется zod-схемой при сборке. Невалидный JSON — ошибка сборки.
+- Добавление нового сезона = новый файл `seasons/YEAR.json`, не правки кода.
