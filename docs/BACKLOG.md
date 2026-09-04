@@ -4,7 +4,7 @@
 
 | Фаза | Название | Статус |
 |---|---|---|
-| 0 | Фундамент (Astro, i18n, деплой) | 🔶 |
+| 0 | Фундамент (Astro, i18n, деплой) | ✅ |
 | 1 | Наполнение (структура и контент) | ⬜ |
 | 2 | Дизайн | ⬜ |
 | 3 | Регистрация и бэкенд | ⬜ |
@@ -15,20 +15,18 @@
 
 ---
 
-## 🔶 В работе: Фаза 0 — Фундамент
+## ✅ Фаза 0 — Фундамент (2026-09-04)
 
-- [x] `npm create astro@latest`, TypeScript strict, minimal template
+- [x] Astro v7.3.1, TypeScript strict, minimal template
 - [x] Структура папок по `docs/ARCHITECTURE.md`
 - [x] i18n в `astro.config.mjs`: locales `[en, ru, vi]`, `prefixDefaultLocale: true`
 - [x] `src/i18n/utils.ts`: `useTranslations(lang)`, `getLangFromUrl(url)`
-- [x] Caddy-конфиг: `/` → 302 по `Accept-Language`; cookie `lang` перебивает редирект (шаблон `caddy/Caddyfile.template`)
+- [x] nginx редирект `/` → локаль по Accept-Language + cookie `lang` (внутри контейнера)
 - [x] `hreflang` + `x-default` в `layouts/Base.astro`
 - [x] Reset CSS + CSS-токены в `src/styles/tokens.css`
-- [x] `.gitignore`
-- [x] GitHub Actions: build → rsync → Caddy reload (workflow готов, нужны секреты)
-- [ ] Первый деплой пустой страницы — **блокирован: нужны данные VPS + домен**
-
-**Критерий:** `/en/`, `/ru/`, `/vi/` открываются, редирект по локали работает, деплой проходит.
+- [x] Docker + nginx (порт 8084), `deploy.sh`
+- [x] GitHub Actions: push → build → commit dist/ [skip ci] → push
+- [x] Первый деплой: **https://gethighandfly.com** — открывается ✅
 
 ---
 

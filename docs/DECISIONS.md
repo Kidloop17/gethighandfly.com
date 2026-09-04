@@ -54,20 +54,24 @@
 
 ---
 
-## ADR-004 — Caddy + GitHub Actions rsync как деплой
-- **Дата:** 2026-09-04
-- **Статус:** Принято
-- **Контекст:** Нужен простой CI/CD: push в main → сайт обновился. Без Docker-образов
-  и docker-compose (в отличие от kitemuine) — статика не требует контейнеризации.
-- **Решение:** GitHub Actions: `npm run build` → `rsync dist/ vps:/var/www/ghaf/`.
-  Caddy как обратный прокси: авто-HTTPS (Let's Encrypt), HTTP/2, Brotli, кэш-заголовки.
-  `/api/*` проксируется на Fastify.
+## ADR-004 — Docker + nginx + deploy.sh как деплой
+- **Дата:** 2026-09-04 (пересмотрен в тот же день)
+- **Статус:** Принято (заменил первоначальный план с Caddy+rsync)
+- **Контекст:** На VPS уже работают kitemuine (8081) и vietnam-kitesurfing (8080) по схеме
+  Docker + nginx + host nginx proxy. Добавление Caddy создало бы второй reverse proxy
+  на том же сервере, конфликт портов 80/443. Единообразие инфраструктуры важнее.
+- **Решение:** Docker Compose, контейнер `ghaf` (порт **8084**), `nginx:alpine` внутри.
+  `dist/` коммитится в git. GitHub Actions: `npm run build` → коммит dist/ с `[skip ci]` → push.
+  Сервер: `bash deploy.sh` → `git pull` + `docker compose up -d --build`.
+  Host nginx (Ubuntu, `/etc/nginx/sites-available/gethighandfly.com`) проксирует на `127.0.0.1:8084`.
+  SSL — certbot (Let's Encrypt).
 - **Альтернативы:**
-  - *Docker Compose + nginx* (как kitemuine) — отвергнут: избыточно для статики;
-    контейнер nginx:alpine не даёт преимуществ перед Caddy на том же VPS.
-  - *Vercel/Netlify* — не рассматривались: бэкенд-сервис требует собственного VPS.
-- **Последствия:** Деплой без downtime (rsync атомарен для статики).
-  Caddy управляет сертификатами автоматически. При смене VPS — обновить rsync-target в Actions.
+  - *Caddy + rsync* — отвергнут при реализации: конфликт с уже работающим host nginx на VPS;
+    SSH-секреты в GitHub Secrets усложняют setup без реальной выгоды.
+  - *Vercel/Netlify* — не рассматривались: бэкенд-сервис (Fastify, Фаза 3) требует VPS.
+- **Последствия:** dist/ в git (~20 KB HTML). Деплой = один `bash deploy.sh` на сервере.
+  При смене VPS: клонировать репо, настроить host nginx, certbot — 15 минут.
+  Порт 8084 зафиксирован; 8080–8083 заняты другими проектами.
 
 ---
 
@@ -77,7 +81,7 @@
 - **Контекст:** Astro i18n может отдавать дефолтный язык на `/` (без префикса) или на `/en/`.
   Корень `/` нужен для Caddy-редиректа по Accept-Language.
 - **Решение:** `prefixDefaultLocale: true` → все три языка на явных префиксах (`/en/`, `/ru/`, `/vi/`).
-  Caddy обрабатывает `/`: читает cookie `lang` (ручной выбор) или `Accept-Language` → 302.
+  nginx (внутри контейнера) обрабатывает `/`: читает cookie `lang` (ручной выбор) или `Accept-Language` → 302.
 - **Альтернативы:**
   - *prefixDefaultLocale: false* (en на /) — отвергнут: `/` занят английским,
     нет места для Caddy-редиректа по локали.
