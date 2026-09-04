@@ -1,0 +1,13 @@
+{
+  "name": "ghaf-api",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": { "start": "node index.js" },
+  "dependencies": {
+    "fastify": "^5.3.3",
+    "@fastify/rate-limit": "^10.2.2",
+    "@fastify/cors": "^10.0.2",
+    "better-sqlite3": "^11.9.1",
+    "nodemailer": "^6.10.1"
+  }
+}

@@ -93,6 +93,14 @@
   "registration.slots.available": "chỗ còn trống",
   "registration.slots.full": "Hạng mục đã đầy — danh sách chờ",
   "registration.notice": "Biểu mẫu đăng ký sẽ hoạt động khi mùa giải mở.",
+  "registration.submitting": "Đang gửi...",
+  "registration.success": "Đã nhận đơn đăng ký của bạn! Kiểm tra email để xác nhận.",
+  "registration.waitlistSuccess": "Bạn đã được thêm vào danh sách chờ. Chúng tôi sẽ thông báo nếu có chỗ trống.",
+  "registration.duplicateEmail": "Email này đã được đăng ký.",
+  "registration.error": "Đã xảy ra lỗi. Vui lòng thử lại.",
+
+  "privacy.heading": "Chính sách bảo mật",
+  "privacy.body": "Get High And Fly chỉ thu thập thông tin cần thiết để xử lý đăng ký thi đấu: tên, email, điện thoại, quốc gia và thông tin thể thao. Chúng tôi không bán hoặc chia sẻ dữ liệu của bạn với bên thứ ba. Dữ liệu được lưu trữ an toàn và xóa sau khi mỗi mùa giải kết thúc. Bằng cách đăng ký, bạn đồng ý với chính sách này. Liên hệ: TODO email liên hệ.",
 
   "footer.contact": "Liên hệ",
   "footer.email": "TODO: email liên hệ",

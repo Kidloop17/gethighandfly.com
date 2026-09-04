@@ -1,0 +1,46 @@
+---
+import Base from '../../layouts/Base.astro';
+import { LANGS, useTranslations } from '../../i18n/utils';
+import type { Lang } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const { lang } = Astro.params as { lang: Lang };
+const t = useTranslations(lang);
+---
+
+<Base lang={lang} title={t('privacy.heading') + ' — GHAF'} description="">
+  <section class="privacy-section">
+    <div class="privacy-container">
+      <h1>{t('privacy.heading')}</h1>
+      <p>{t('privacy.body')}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .privacy-section {
+    padding: var(--section-padding);
+    min-height: 60vh;
+    background: var(--color-bg);
+  }
+  .privacy-container {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-size: var(--text-h1);
+    text-transform: uppercase;
+    margin-bottom: var(--space-l);
+    color: var(--color-text);
+  }
+  p {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: 1.7;
+    color: var(--color-text-muted);
+  }
+</style>

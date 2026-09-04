@@ -93,6 +93,14 @@
   "registration.slots.available": "spots available",
   "registration.slots.full": "Category full — waitlist",
   "registration.notice": "Registration form will be active when the season opens.",
+  "registration.submitting": "Sending...",
+  "registration.success": "Your application has been received! Check your email for confirmation.",
+  "registration.waitlistSuccess": "You are on the waiting list. We'll notify you if a spot opens up.",
+  "registration.duplicateEmail": "This email is already registered.",
+  "registration.error": "Something went wrong. Please try again.",
+
+  "privacy.heading": "Privacy Policy",
+  "privacy.body": "Get High And Fly collects only the information needed to process your competition registration: name, email, phone, country, and sport details. We do not sell or share your data with third parties. Data is stored securely and deleted after each season concludes. By registering, you consent to this policy. Contact: TODO contact email.",
 
   "footer.contact": "Contact",
   "footer.email": "TODO: contact email",

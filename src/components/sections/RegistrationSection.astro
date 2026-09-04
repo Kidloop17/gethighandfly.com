@@ -21,30 +21,35 @@ const isOpen = status === 'registration-open';
     </header>
 
     {isOpen ? (
-      <form action="#" method="GET" class="registration-form">
+      <form id="registration-form" class="registration-form" novalidate>
+        <!-- Honeypot field — hidden from real users -->
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" />
+        <!-- Timestamp for time-based anti-spam -->
+        <input type="hidden" id="formOpenedAt" name="_formOpenedAt" />
+
         <div class="form-row">
           <div class="form-field">
             <label for="firstName">{t('registration.field.firstName')}</label>
-            <input type="text" id="firstName" name="firstName" required autocomplete="given-name" />
+            <input type="text" id="firstName" name="firstName" required autocomplete="given-name" maxlength="100" />
           </div>
           <div class="form-field">
             <label for="lastName">{t('registration.field.lastName')}</label>
-            <input type="text" id="lastName" name="lastName" required autocomplete="family-name" />
+            <input type="text" id="lastName" name="lastName" required autocomplete="family-name" maxlength="100" />
           </div>
         </div>
         <div class="form-row">
           <div class="form-field">
             <label for="email">{t('registration.field.email')}</label>
-            <input type="email" id="email" name="email" required autocomplete="email" />
+            <input type="email" id="email" name="email" required autocomplete="email" maxlength="255" />
           </div>
           <div class="form-field">
             <label for="phone">{t('registration.field.phone')}</label>
-            <input type="tel" id="phone" name="phone" autocomplete="tel" />
+            <input type="tel" id="phone" name="phone" autocomplete="tel" maxlength="30" />
           </div>
         </div>
         <div class="form-field">
           <label for="country">{t('registration.field.country')}</label>
-          <input type="text" id="country" name="country" autocomplete="country-name" />
+          <input type="text" id="country" name="country" autocomplete="country-name" maxlength="100" />
         </div>
         <div class="form-field">
           <label for="category">{t('registration.field.category')}</label>
@@ -55,6 +60,12 @@ const isOpen = status === 'registration-open';
             <option value="amateur">Amateur</option>
             <option value="junior">Junior (U18)</option>
           </select>
+          <div class="slot-counts">
+            <span id="slot-info-pro-men" class="slot-info" data-cat="pro-men"></span>
+            <span id="slot-info-pro-women" class="slot-info" data-cat="pro-women"></span>
+            <span id="slot-info-amateur" class="slot-info" data-cat="amateur"></span>
+            <span id="slot-info-junior" class="slot-info" data-cat="junior"></span>
+          </div>
         </div>
         <div class="form-row">
           <div class="form-field">
@@ -73,11 +84,16 @@ const isOpen = status === 'registration-open';
         <button
           type="submit"
           class="btn btn-primary"
-          disabled
-          title="Coming in Phase 3"
+          data-label={t('registration.submit')}
+          data-submitting={t('registration.submitting')}
+          data-msg-success={t('registration.success')}
+          data-msg-waitlist={t('registration.waitlistSuccess')}
+          data-msg-duplicate={t('registration.duplicateEmail')}
+          data-msg-error={t('registration.error')}
         >
           {t('registration.submit')}
         </button>
+        <div id="form-message" class="form-message" role="alert" aria-live="polite"></div>
         <p class="registration-notice">{t('registration.notice')}</p>
       </form>
     ) : (
@@ -87,6 +103,122 @@ const isOpen = status === 'registration-open';
     )}
   </div>
 </section>
+
+<script>
+  // Set form opened timestamp for anti-spam time check
+  const formOpenedAt = document.getElementById('formOpenedAt');
+  if (formOpenedAt) {
+    formOpenedAt.setAttribute('value', Date.now().toString());
+  }
+
+  // Show slot info for a specific category
+  function updateSlotDisplay(catId: string, data: { available: number; waitlist: boolean }) {
+    const el = document.getElementById(`slot-info-${catId}`);
+    if (!el) return;
+    if (data.available > 0) {
+      el.textContent = `${data.available} spots available`;
+      el.className = 'slot-info slot-available';
+    } else {
+      el.textContent = 'Full — waitlist';
+      el.className = 'slot-info slot-waitlist';
+    }
+  }
+
+  // Load and display slot counts from API
+  async function loadSlots() {
+    try {
+      const r = await fetch('/api/slots');
+      if (!r.ok) return;
+      const { slots } = await r.json();
+      for (const [cat, data] of Object.entries(slots) as [string, { available: number; waitlist: boolean }][]) {
+        updateSlotDisplay(cat, data);
+      }
+    } catch {
+      // Slot counts are informational; silently ignore if API is unreachable
+    }
+  }
+  loadSlots();
+
+  // Show slot count for currently selected category below the select
+  const categorySelect = document.getElementById('category') as HTMLSelectElement | null;
+  const slotInfoEls = document.querySelectorAll<HTMLElement>('.slot-info[data-cat]');
+
+  function syncSlotVisibility() {
+    const selected = categorySelect?.value ?? '';
+    slotInfoEls.forEach((el) => {
+      const cat = el.getAttribute('data-cat');
+      el.style.display = cat === selected ? 'inline' : 'none';
+    });
+  }
+
+  categorySelect?.addEventListener('change', syncSlotVisibility);
+  // Hide all slot infos initially (will show after selection)
+  syncSlotVisibility();
+
+  // Form submit handler
+  const form = document.getElementById('registration-form') as HTMLFormElement | null;
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector<HTMLButtonElement>('button[type=submit]');
+    const msg = document.getElementById('form-message');
+    if (!btn || !msg) return;
+
+    // Store original label for error recovery
+    const originalLabel = btn.getAttribute('data-label') ?? btn.textContent ?? '';
+
+    btn.disabled = true;
+    btn.textContent = btn.getAttribute('data-submitting') ?? '...';
+    msg.textContent = '';
+    msg.className = 'form-message';
+
+    const rawData = Object.fromEntries(new FormData(form)) as Record<string, string>;
+
+    // Build typed payload
+    const payload: Record<string, unknown> = {
+      firstName: rawData.firstName,
+      lastName: rawData.lastName,
+      email: rawData.email,
+      phone: rawData.phone || undefined,
+      country: rawData.country || undefined,
+      category: rawData.category,
+      lang: document.documentElement.lang || 'en',
+      _formOpenedAt: rawData._formOpenedAt,
+      website: rawData.website ?? '',
+    };
+    if (rawData.experience) payload.experience = parseInt(rawData.experience, 10);
+    if (rawData.kiteSize) payload.kiteSize = parseFloat(rawData.kiteSize);
+
+    try {
+      const r = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const result = await r.json() as { status?: string; error?: string };
+
+      if (r.ok) {
+        form.style.display = 'none';
+        msg.className = 'form-message form-success';
+        msg.textContent =
+          result.status === 'waitlist'
+            ? btn.getAttribute('data-msg-waitlist') ?? ''
+            : btn.getAttribute('data-msg-success') ?? '';
+      } else if (result.error === 'email_exists') {
+        msg.className = 'form-message form-error';
+        msg.textContent = btn.getAttribute('data-msg-duplicate') ?? '';
+        btn.disabled = false;
+        btn.textContent = originalLabel;
+      } else {
+        throw new Error(result.error ?? 'unknown');
+      }
+    } catch {
+      msg.className = 'form-message form-error';
+      msg.textContent = btn.getAttribute('data-msg-error') ?? '';
+      btn.disabled = false;
+      btn.textContent = originalLabel;
+    }
+  });
+</script>
 
 <style>
   #registration {
@@ -126,6 +258,11 @@ const isOpen = status === 'registration-open';
     display: flex;
     flex-direction: column;
     gap: var(--space-m);
+  }
+
+  /* Honeypot — hidden from real users */
+  .hp {
+    display: none !important;
   }
 
   .form-row {
@@ -190,6 +327,27 @@ const isOpen = status === 'registration-open';
     cursor: pointer;
   }
 
+  /* Slot availability indicators */
+  .slot-counts {
+    margin-top: var(--space-xs);
+    min-height: 1.25rem;
+  }
+
+  .slot-info {
+    font-family: var(--font-body);
+    font-size: var(--text-small);
+    font-weight: 600;
+  }
+
+  .slot-available {
+    color: var(--color-ocean);
+  }
+
+  .slot-waitlist {
+    color: var(--color-accent);
+  }
+
+  /* Submit button */
   .btn {
     display: block;
     width: 100%;
@@ -217,6 +375,30 @@ const isOpen = status === 'registration-open';
   .btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+
+  /* Form feedback messages */
+  .form-message {
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    border-radius: var(--radius);
+    padding: 0;
+    min-height: 0;
+    transition: padding var(--transition);
+  }
+
+  .form-success {
+    color: var(--color-ocean);
+    background: rgba(28, 43, 58, 0.06);
+    padding: var(--space-m);
+    border-left: 3px solid var(--color-ocean);
+  }
+
+  .form-error {
+    color: var(--color-accent);
+    background: rgba(224, 80, 54, 0.06);
+    padding: var(--space-m);
+    border-left: 3px solid var(--color-accent);
   }
 
   .registration-notice {
