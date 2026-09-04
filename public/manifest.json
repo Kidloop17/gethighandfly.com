@@ -1,0 +1,21 @@
+{
+  "name": "Get High And Fly",
+  "short_name": "GHAF",
+  "description": "Annual kitesurfing big air competition",
+  "start_url": "/en/",
+  "display": "standalone",
+  "background_color": "#1C2B3A",
+  "theme_color": "#1C2B3A",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

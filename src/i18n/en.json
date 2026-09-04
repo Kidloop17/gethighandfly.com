@@ -109,5 +109,9 @@
   "footer.rights": "© TODO year Get High And Fly. All rights reserved.",
   "footer.privacy": "Privacy Policy",
   "footer.rules": "Competition Rules",
-  "footer.lang": "Language"
+  "footer.lang": "Language",
+
+  "seo.ogDescription": "Annual kitesurfing big air competition. Register, watch, support. Three categories, open to all levels.",
+  "seo.ogLocale": "en_US",
+  "seo.ogSiteName": "Get High And Fly"
 }

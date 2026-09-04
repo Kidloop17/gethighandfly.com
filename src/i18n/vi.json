@@ -109,5 +109,9 @@
   "footer.rights": "© TODO năm Get High And Fly. Bảo lưu mọi quyền.",
   "footer.privacy": "Chính sách bảo mật",
   "footer.rules": "Quy định thi đấu",
-  "footer.lang": "Ngôn ngữ"
+  "footer.lang": "Ngôn ngữ",
+
+  "seo.ogDescription": "Giải thi đấu kite lướt sóng Big Air hàng năm. Đăng ký, xem, cổ vũ. Ba hạng mục, mở cho mọi trình độ.",
+  "seo.ogLocale": "vi_VN",
+  "seo.ogSiteName": "Get High And Fly"
 }

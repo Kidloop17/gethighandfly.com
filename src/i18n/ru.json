@@ -109,5 +109,9 @@
   "footer.rights": "© TODO год Get High And Fly. Все права защищены.",
   "footer.privacy": "Политика конфиденциальности",
   "footer.rules": "Правила соревнований",
-  "footer.lang": "Язык"
+  "footer.lang": "Язык",
+
+  "seo.ogDescription": "Ежегодные соревнования по кайтсерфингу Big Air. Регистрируйся, смотри, поддерживай. Три категории, открыто для всех уровней.",
+  "seo.ogLocale": "ru_RU",
+  "seo.ogSiteName": "Get High And Fly"
 }
