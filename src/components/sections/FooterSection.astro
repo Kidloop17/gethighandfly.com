@@ -31,13 +31,10 @@ const t = useTranslations(lang);
         <h3>{t('footer.contact')}</h3>
         <ul>
           <li>
-            <a href={`mailto:${t('footer.email')}`}>{t('footer.email')}</a>
+            <a href={t('footer.telegramUrl')} rel="noopener" target="_blank">{t('footer.telegram')}</a>
           </li>
           <li>
-            <a href="#" rel="noopener" target="_blank">{t('footer.telegram')}</a>
-          </li>
-          <li>
-            <a href="#" rel="noopener" target="_blank">{t('footer.instagram')}</a>
+            <a href={t('footer.instagramUrl')} rel="noopener" target="_blank">{t('footer.instagram')}</a>
           </li>
         </ul>
       </div>

@@ -1,0 +1,16 @@
+{
+  "year": 2024,
+  "status": "past",
+  "dates": { "start": "2024-02-03", "end": "2024-02-04" },
+  "spot": "Kitenam · Malibu Beach · Mui Ne",
+  "participantsCount": 31,
+  "recordHeight": 13.2,
+  "winners": [
+    { "category": "Pro Men", "name": "Denis Kovalev", "height": 13.2 },
+    { "category": "Pro Women", "name": "Nguyen Lan Anh", "height": 9.8 },
+    { "category": "Amateur", "name": "Ivan Petrov", "height": 8.4 },
+    { "category": "Junior", "name": "Tran Minh Duc", "height": 7.1 }
+  ],
+  "results": [],
+  "gallery": { "photos": [], "videos": [] }
+}

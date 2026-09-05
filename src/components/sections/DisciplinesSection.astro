@@ -24,8 +24,8 @@ const CATEGORIES = ['pro_men', 'pro_women', 'amateur', 'junior'] as const;
           <h3>{t(`disciplines.${cat}.title`)}</h3>
           <p>{t(`disciplines.${cat}.desc`)}</p>
           <footer class="card-footer">
-            <span class="slots">{t('disciplines.slots')}</span>
-            <span class="fee">{t('disciplines.fee')}</span>
+            <span class="slots">{t(`disciplines.${cat}.slots`)}</span>
+            <span class="fee">{t(`disciplines.${cat}.fee`)}</span>
           </footer>
         </article>
       ))}

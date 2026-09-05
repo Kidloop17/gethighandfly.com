@@ -1,0 +1,16 @@
+{
+  "year": 2026,
+  "status": "past",
+  "dates": { "start": "2026-02-01", "end": "2026-02-02" },
+  "spot": "Kitenam · Malibu Beach · Mui Ne",
+  "participantsCount": 44,
+  "recordHeight": 16.4,
+  "winners": [
+    { "category": "Pro Men", "name": "Denis Kovalev", "height": 16.4 },
+    { "category": "Pro Women", "name": "Maria Volkova", "height": 12.7 },
+    { "category": "Amateur", "name": "Nguyen Van Thanh", "height": 10.1 },
+    { "category": "Junior", "name": "Dmitry Lee", "height": 9.2 }
+  ],
+  "results": [],
+  "gallery": { "photos": [], "videos": [] }
+}

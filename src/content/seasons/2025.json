@@ -1,0 +1,16 @@
+{
+  "year": 2025,
+  "status": "past",
+  "dates": { "start": "2025-01-25", "end": "2025-01-26" },
+  "spot": "Kitenam · Malibu Beach · Mui Ne",
+  "participantsCount": 38,
+  "recordHeight": 15.4,
+  "winners": [
+    { "category": "Pro Men", "name": "Alex Novikov", "height": 15.4 },
+    { "category": "Pro Women", "name": "Nguyen Lan Anh", "height": 11.2 },
+    { "category": "Amateur", "name": "Sergey Kim", "height": 9.6 },
+    { "category": "Junior", "name": "Le Quoc Bao", "height": 8.3 }
+  ],
+  "results": [],
+  "gallery": { "photos": [], "videos": [] }
+}
