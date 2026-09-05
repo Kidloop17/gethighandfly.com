@@ -24,15 +24,14 @@ const t = useTranslations(lang);
         </div>
       </div>
       <div class="spot-visuals">
-        <div class="placeholder-block video-placeholder">
-          <div class="play-icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" width="48" height="48" fill="none">
-              <circle cx="24" cy="24" r="22" stroke="#E8522A" stroke-width="2"/>
-              <polygon points="19,14 36,24 19,34" fill="#E8522A" />
-            </svg>
-          </div>
-          <p>TODO: Spot video</p>
-          <small>{t('spot.forecast.label')}</small>
+        <div class="video-embed">
+          <iframe
+            src="https://www.youtube.com/embed/quwFXz3c0kA"
+            title="Kitenam Spot — Malibu Beach, Mui Ne"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            loading="lazy"
+          ></iframe>
         </div>
         <div class="placeholder-block map-placeholder">
           <svg viewBox="0 0 48 48" width="36" height="36" fill="none" aria-hidden="true">
@@ -124,8 +123,18 @@ const t = useTranslations(lang);
     text-align: center;
   }
 
-  .video-placeholder {
-    border: 2px solid var(--color-accent);
+  .video-embed {
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #000;
+  }
+
+  .video-embed iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
   }
 
   .map-placeholder {
@@ -144,9 +153,5 @@ const t = useTranslations(lang);
     color: var(--color-text-on-dark);
     opacity: 0.35;
     font-size: var(--text-small);
-  }
-
-  .play-icon {
-    margin-bottom: var(--space-xs);
   }
 </style>

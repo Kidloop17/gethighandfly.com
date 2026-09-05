@@ -12,26 +12,35 @@ const t = useTranslations(lang);
 <div class="stripe-coral" aria-hidden="true"></div>
 <section id="intro">
   <div class="intro-container">
-    <header class="intro-header reveal">
-      <h2>{t('intro.heading')}</h2>
-    </header>
-    <div class="intro-body reveal">
-      <p>{t('intro.body1')}</p>
-      <p>{t('intro.body2')}</p>
-    </div>
-    <div class="intro-stats">
-      <article class="stat reveal">
-        <span class="stat-value">{t('intro.stat.year.value')}</span>
-        <span class="stat-label">{t('intro.stat.year.label')}</span>
-      </article>
-      <article class="stat reveal">
-        <span class="stat-value">{t('intro.stat.participants.value')}</span>
-        <span class="stat-label">{t('intro.stat.participants.label')}</span>
-      </article>
-      <article class="stat reveal">
-        <span class="stat-value">{t('intro.stat.record.value')}</span>
-        <span class="stat-label">{t('intro.stat.record.label')}</span>
-      </article>
+    <div class="intro-layout">
+      <div class="intro-left">
+        <header class="intro-header reveal">
+          <h2>{t('intro.heading')}</h2>
+        </header>
+        <div class="intro-body reveal">
+          <p>{t('intro.body1')}</p>
+          <p>{t('intro.body2')}</p>
+        </div>
+        <div class="intro-stats">
+          <article class="stat reveal">
+            <span class="stat-value">{t('intro.stat.year.value')}</span>
+            <span class="stat-label">{t('intro.stat.year.label')}</span>
+          </article>
+          <article class="stat reveal">
+            <span class="stat-value">{t('intro.stat.participants.value')}</span>
+            <span class="stat-label">{t('intro.stat.participants.label')}</span>
+          </article>
+          <article class="stat reveal">
+            <span class="stat-value">{t('intro.stat.record.value')}</span>
+            <span class="stat-label">{t('intro.stat.record.label')}</span>
+          </article>
+        </div>
+      </div>
+      <div class="intro-video reveal">
+        <video controls preload="none" playsinline>
+          <source src="/video/ghaf-highlight.mp4" type="video/mp4" />
+        </video>
+      </div>
     </div>
   </div>
 </section>
@@ -47,8 +56,26 @@ const t = useTranslations(lang);
     margin: 0 auto;
   }
 
-  .intro-header {
-    margin-bottom: var(--space-l);
+  .intro-layout {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .intro-layout {
+      grid-template-columns: 1fr;
+    }
+    .intro-video {
+      max-width: 260px;
+    }
+  }
+
+  .intro-left {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-l);
   }
 
   .intro-header h2 {
@@ -62,8 +89,6 @@ const t = useTranslations(lang);
     display: flex;
     flex-direction: column;
     gap: var(--space-m);
-    max-width: 720px;
-    margin-bottom: var(--space-xl);
     font-family: var(--font-body);
     font-size: var(--text-body);
     color: var(--color-text);
@@ -96,6 +121,13 @@ const t = useTranslations(lang);
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.06em;
+  }
+
+  .intro-video video {
+    width: 100%;
+    border-radius: var(--radius);
+    display: block;
+    background: var(--color-bg-dark);
   }
 
   @media (max-width: 600px) {
