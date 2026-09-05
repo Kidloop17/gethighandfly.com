@@ -9,6 +9,7 @@
 | 2 | Дизайн | ✅ |
 | 3 | Регистрация и бэкенд | ✅ |
 | 4 | SEO, оптимизация, финальный деплой | ✅ |
+| — | Полировка: дизайн, контент, медиа | ✅ 2026-09-05 |
 
 Правило: не начинать следующую фазу без принятия текущей.
 Каждая фаза заканчивается: коммит + пуш + полная документация + ожидание подтверждения.
@@ -52,79 +53,96 @@
 - [x] Hover-микроанимации: карточки дисциплин `translateY(-4px)`, партнёры, форма
 - [x] `prefers-reduced-motion`: все анимации отключены через media-query
 - [x] Focus-ring: `:focus-visible { outline: 3px solid var(--color-accent) }`
-- [x] Контраст ≥ 4.5:1 (dark `#1C2B3A` на sand `#F5E9CC` ≈ 12:1)
+- [x] Контраст ≥ 4.5:1
 - [x] Monospace числа: обратный отсчёт, статы, высоты прыжков
 - [x] Stripe-разделители coral/ocean между секциями
-- [x] SVG декорации в hero (sunrays + kiter silhouette 15% opacity)
-- [x] Мобильная адаптация: все секции, nav скрывает текстовые ссылки на < 600px
+- [x] SVG декорации в hero (sunrays + kiter silhouette)
+- [x] Мобильная адаптация: все секции
 
 ---
 
 ## ✅ Фаза 3 — Регистрация и бэкенд (2026-09-04, коммит `a425ce6`)
 
 - [x] `server/` — Fastify + SQLite (better-sqlite3), Node.js ESM
-- [x] `POST /api/register` — регистрация участника
-  - Валидация всех полей (тип, длина, формат email, допустимые значения)
-  - Антиспам: honeypot (`website`), time-check (< 3 сек), rate-limit 5 req/15min/IP
-  - Лимиты мест по категориям через env `SLOTS_PRO_MEN/WOMEN/AMATEUR/JUNIOR`
-  - Дубль email → 409
-  - Статус `pending` или `waitlist` (если мест нет)
-  - `crypto.randomUUID()` для confirmation_token
+- [x] `POST /api/register` — валидация, honeypot, time-check, rate-limit, лимиты мест, waitlist
 - [x] `GET /api/slots` — счётчик мест, кэш 60 сек
 - [x] `GET /health` — healthcheck
-- [x] Telegram-уведомления (опционально, через TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID)
-- [x] Email-подтверждение на 3 языках (опционально, через SMTP_*)
-- [x] `docker-compose.yml` — добавлен сервис `ghaf-api` + volume `ghaf_data`
+- [x] Telegram-уведомления (опционально)
+- [x] Email-подтверждение на 3 языках (опционально)
+- [x] `docker-compose.yml` — сервис `ghaf-api` + volume `ghaf_data`
 - [x] `nginx.conf` — proxy `/api/ → api:3001`
-- [x] `RegistrationSection.astro` — форма подключена к API
-  - Honeypot поле `.hp { display: none }`
-  - `_formOpenedAt` hidden input
-  - Fetch к `/api/register`, success/error/waitlist UI
-  - Счётчик мест загружается с `/api/slots`
-- [x] `2027.json` → `status: "registration-open"` (форма открыта)
+- [x] `RegistrationSection.astro` — форма подключена к API, honeypot, счётчик мест
 - [x] `src/pages/[lang]/privacy.astro` — политика конфиденциальности (en/ru/vi)
-- [x] Footer → реальная ссылка на `/{lang}/privacy/`
-- [x] i18n: добавлены строки `registration.submitting/success/waitlistSuccess/duplicateEmail/error`, `privacy.*`
 - [x] `server/.env.example` — шаблон конфига для VPS
 - [x] Билд: ✅ 6 страниц, 0 ошибок
-
-### Деплой Фазы 3 на VPS (первый раз)
-```bash
-# После git push + bash deploy.sh на VPS:
-cp server/.env.example server/.env
-# Заполнить server/.env: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID, SMTP_*
-docker compose up -d --build
-```
 
 ---
 
 ## ✅ Фаза 4 — SEO, оптимизация (2026-09-04, коммит `e630e83`)
 
-- [x] `@astrojs/sitemap` с i18n-локалями (en-US/ru-RU/vi-VN) → `sitemap-index.xml`
-- [x] `schema.org SportsEvent` JSON-LD в `Base.astro` на каждом языке
-- [x] OG-мета-теги: `og:title`, `og:description`, `og:image`, `og:locale`, `og:site_name`
-- [x] Twitter Card: `summary_large_image`
-- [x] `seo.ogDescription`, `seo.ogLocale`, `seo.ogSiteName` в en/ru/vi.json
-- [x] `public/og.svg` — OG-картинка 1200×630 (SVG, #1C2B3A фон + coral GHAF)
-- [x] `public/robots.txt` — Allow: /, Sitemap: https://gethighandfly.com/sitemap-index.xml
-- [x] `public/manifest.json` — PWA manifest (name, theme_color, icons)
-- [x] `public/apple-touch-icon.png`
-- [x] Font preload + dns-prefetch для Google Fonts в Base.astro
+- [x] `@astrojs/sitemap` с i18n-локалями → `sitemap-index.xml`
+- [x] `schema.org SportsEvent` JSON-LD в `Base.astro`
+- [x] OG-мета-теги + Twitter Card
+- [x] `public/og.svg` — OG-картинка 1200×630
+- [x] `public/robots.txt`
+- [x] `public/manifest.json` — PWA manifest
+- [x] Font preload + dns-prefetch
 - [x] Билд: 6 страниц, 0 ошибок ✅
 
-### Замечания
-- OG-картинка как SVG (ImageMagick недоступен на VPS). При необходимости конвертировать в PNG: `rsvg-convert -w 1200 -h 630 public/og.svg > public/og.png`
-- `apple-touch-icon.png` — копия favicon.ico; для идеала нужен настоящий 180×180 PNG
-- Реальные изображения (hero-видео, фото спота, галерея) — нет данных от владельца (см. TODO)
-- Lighthouse-замер возможен только после деплоя на VPS
+---
+
+## ✅ Полировка дизайна и контента (2026-09-05, коммит `144edeb`)
+
+### Редизайн Ocean Fury
+- [x] Полная смена палитры: тёмный океан `#050D1A` / неон-красный `#FF2020` / электро-синий `#0099FF`
+- [x] Шрифт заголовков: Bebas Neue (нет кириллицы) → **Oswald** (полная кириллица + Latin Extended)
+- [x] `hero-label` и `hero-spot` также переведены на Oswald (Barlow Condensed без кириллицы)
+- [x] Hero: высота `100svh` → `88svh`, padding и margins сжаты
+- [x] Hero: SVG-силуэт заменён на CC0 фото (Pexels, Sergio Hurtado, ID 14762616)
+
+### Реальный контент
+- [x] Даты: 30–31 января 2027 (предварительно) — en/ru/vi
+- [x] Спот: Kitenam · Malibu Beach · Mui Ne — описание, ветровые условия
+- [x] Взносы: PRO 500 000₫, остальные 300 000₫ — per-category i18n ключи
+- [x] Лимиты: Pro Men 20, Pro Women 10, Amateur 25, Junior 15
+- [x] Архив: сезоны 2024, 2025, 2026 (выдуманные данные для демо)
+- [x] Контакты: +84 778 005 495 Telegram, Instagram @kitenam
+
+### Медиа
+- [x] `public/img/hero.jpg` — CC0 фото (кайтер, инвертированный трик, Pexels)
+- [x] `public/video/ghaf-highlight.mp4` — Instagram видео (self-hosted, 21MB, `preload="none"`)
+- [x] Intro: видео справа от текста (колонка 260px)
+- [x] Spot: YouTube iframe `16:9` вместо заглушки (ID: quwFXz3c0kA)
+
+### Партнёры
+- [x] `public/partners/kitenam.png` — Kitenam Vietnam Kite Surf Club
+- [x] `public/partners/blueshell.png` — Blue Shell Resort
+- [x] `public/partners/extremelab.png` — Extremelab
+- [x] `public/partners/Airush.png` — Airush Kiteboarding
+- [x] Секция партнёров: один ряд, белые карточки, тир-система убрана
+
+### Деплой
+- [x] `docker-compose.yml`: `env_file: required: false` (api стартует без .env)
+- [x] web сервис без `depends_on: api` (статика независима от API)
 
 ---
 
-## Дальше (нужно от владельца)
+## Следующие задачи (приоритет)
 
----
+### Быстро (< 1 ч)
+- [ ] Деплой на VPS: `bash /var/www/gethighandfly/deploy.sh`
+- [ ] OG PNG: `rsvg-convert -w 1200 -h 630 public/og.svg > public/og.png`
+- [ ] Карта спота: Google Maps iframe вместо заглушки в SpotSection
+- [ ] Ссылки партнёров: добавить URL к логотипам (Blue Shell, Extremelab, Airush)
+- [ ] Ссылка "Правила соревнований" в футере (`footer.rules` → `#`)
 
-## Документация (2026-09-04, коммит `225ef3d`)
-Инициализирована документация по DOC_STANDARD. Обновлена по финальному CLAUDE.md:
-стек пересмотрен (Caddy + rsync + GitHub Actions, Fastify + SQLite, CSS vars без Tailwind).
-ADR 001–005 зафиксированы.
+### Контент (от владельца)
+- [ ] Победители и фото архива 2024–2026 (сейчас выдуманные)
+- [ ] Дополнительные логотипы партнёров
+- [ ] SVG-логотип GHAF
+- [ ] Правила соревнований (PDF или страница)
+
+### Будущие фазы
+- [ ] **Telegram-бот** — уведомления, ответы на вопросы (последняя фаза)
+- [ ] **Галерея** — PhotoSwipe, реальные фото с соревнований 2024–2026
+- [ ] **Lighthouse** — замер после деплоя (baseline для оптимизации)
