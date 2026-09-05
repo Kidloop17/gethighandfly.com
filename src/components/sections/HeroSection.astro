@@ -16,47 +16,6 @@ const validDate = startDate && !startDate.includes('TODO') ? startDate : undefin
 <section id="hero">
   <!-- Decorative background layer -->
   <div class="hero-bg" aria-hidden="true">
-    <!-- Speed lines (kinetic wind energy) -->
-    <svg class="hero-streaks" viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      {[60, 140, 210, 290, 360, 430, 490, 540, 600, 660, 720, 780].map((y, i) => (
-        <line
-          x1="0" y1={y}
-          x2={180 + (i % 4) * 140} y2={y}
-          stroke="#0099FF"
-          stroke-width={i % 3 === 0 ? "1.5" : "0.8"}
-          stroke-opacity={i % 2 === 0 ? "0.07" : "0.04"}
-        />
-      ))}
-      <line x1="0" y1="320" x2="480" y2="320" stroke="#FF2020" stroke-width="1" stroke-opacity="0.06" />
-      <line x1="0" y1="440" x2="360" y2="440" stroke="#FF2020" stroke-width="0.8" stroke-opacity="0.04" />
-    </svg>
-
-    <!-- Kite surfer silhouette — dynamic, neon -->
-    <svg class="hero-kiter" viewBox="0 0 220 340" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <!-- Kite (diamond shape, top) -->
-      <polygon points="110,10 155,75 110,135 65,75" fill="#0099FF" />
-      <!-- Kite inner highlight -->
-      <polygon points="110,30 140,75 110,115 80,75" fill="#00D2FF" fill-opacity="0.4" />
-      <!-- Kite lines -->
-      <line x1="110" y1="135" x2="98" y2="222" stroke="#E8F4FF" stroke-width="1.5" stroke-opacity="0.7" />
-      <line x1="110" y1="135" x2="122" y2="222" stroke="#E8F4FF" stroke-width="1.5" stroke-opacity="0.7" />
-      <!-- Body -->
-      <ellipse cx="110" cy="217" rx="13" ry="17" fill="#E8F4FF" />
-      <!-- Head -->
-      <circle cx="110" cy="197" r="10" fill="#E8F4FF" />
-      <!-- Bar / arms spread -->
-      <line x1="72" y1="220" x2="148" y2="220" stroke="#E8F4FF" stroke-width="3.5" stroke-linecap="round" />
-      <!-- Legs bent — big air pose -->
-      <line x1="103" y1="233" x2="88" y2="274" stroke="#E8F4FF" stroke-width="4.5" stroke-linecap="round" />
-      <line x1="117" y1="233" x2="132" y2="274" stroke="#E8F4FF" stroke-width="4.5" stroke-linecap="round" />
-      <!-- Board -->
-      <rect x="74" y="270" width="70" height="11" rx="5" fill="#0099FF" />
-      <!-- Spray lines -->
-      <line x1="58" y1="278" x2="22" y2="290" stroke="#0099FF" stroke-width="1.2" stroke-opacity="0.6" />
-      <line x1="52" y1="270" x2="18" y2="274" stroke="#0099FF" stroke-width="0.9" stroke-opacity="0.4" />
-      <line x1="168" y1="278" x2="204" y2="290" stroke="#0099FF" stroke-width="1.2" stroke-opacity="0.6" />
-    </svg>
-
     <!-- Bottom gradient fade to next section -->
     <div class="hero-fade"></div>
   </div>
@@ -159,31 +118,27 @@ const validDate = startDate && !startDate.includes('TODO') ? startDate : undefin
     overflow: hidden;
   }
 
-  /* Background layer: speed streaks + kiter silhouette */
+  /* Background: real photo + dark overlay */
   .hero-bg {
     position: absolute;
     inset: 0;
     pointer-events: none;
     will-change: transform;
+    background-image: url('/img/hero.jpg');
+    background-size: cover;
+    background-position: center 35%;
   }
 
-  .hero-streaks {
+  .hero-bg::before {
+    content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 60%;
-    height: 100%;
-  }
-
-  .hero-kiter {
-    position: absolute;
-    right: 4%;
-    top: 50%;
-    transform: translateY(-52%);
-    width: min(340px, 46vw);
-    height: auto;
-    opacity: 0.45;
-    filter: drop-shadow(0 0 24px rgba(0, 153, 255, 0.5));
+    inset: 0;
+    background: linear-gradient(
+      160deg,
+      rgba(2,8,16,0.78) 0%,
+      rgba(2,8,16,0.52) 45%,
+      rgba(2,8,16,0.72) 100%
+    );
   }
 
   .hero-fade {
@@ -191,7 +146,7 @@ const validDate = startDate && !startDate.includes('TODO') ? startDate : undefin
     bottom: 0;
     left: 0;
     right: 0;
-    height: 120px;
+    height: 160px;
     background: linear-gradient(to bottom, transparent, #050D1A);
     pointer-events: none;
   }
